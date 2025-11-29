@@ -1,0 +1,187 @@
+<div class="quiz-app">
+  <!-- Netflix-style Header -->
+  <header class="netflix-header">
+    <div class="header-container">
+      <div class="logo-section">
+        <!-- Premium Logo -->
+        <div class="logo-wrapper">
+          <div class="logo-glow"></div>
+          <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+              <path d="M2 12h20"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-name">GeoQuiz</h1>
+          <p class="brand-subtitle">WORLD EDITION</p>
+        </div>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-award">
+            <circle cx="12" cy="8" r="6"></circle>
+            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+          </svg>
+          <span class="stat-value">{{ score() }} pts</span>
+        </div>
+        
+        <div class="stat-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-check">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span class="stat-value">{{ correctCount() }}/{{ totalQuestions() }}</span>
+        </div>
+        
+        <div class="stat-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-x">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span class="stat-value">{{ incorrectCount() }}</span>
+        </div>
+
+        <button class="action-btn random-btn" (click)="randomQuestion()" [disabled]="randomActive() && !isAnswered()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="9" cy="9" r="1"></circle>
+            <circle cx="9" cy="15" r="1"></circle>
+            <circle cx="15" cy="15" r="1"></circle>
+            <circle cx="15" cy="9" r="1"></circle>
+          </svg>
+        </button>
+
+        <button class="action-btn center-btn" (click)="resetView()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="12" cy="12" r="10"></circle>
+          </svg>
+        </button>
+
+        <button class="action-btn" (click)="activateMap()" title="Activer la carte (zoom/drag)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3l7 5-7 5V3z"></path>
+            <path d="M10 8l11-5v18l-11-5"></path>
+          </svg>
+        </button>
+
+        <button class="action-btn" (click)="zoomIn()" title="Zoom +">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="11" y1="8" x2="11" y2="14"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <button class="action-btn" (click)="zoomOut()" title="Zoom -">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Map -->
+  <main class="map-section" #svgContainer>
+    <div class="map-hero">
+      <div class="hero-overlay"></div>
+      
+      <div class="hero-content">
+        <h2 class="hero-title">Explore the World</h2>
+        <p class="hero-subtitle">Test your geography knowledge • Click on any country to begin</p>
+      </div>
+
+      <div #svgEmbed class="svg-container"></div>
+      
+
+      <div class="dice-hint" *ngIf="diceLockedHint()">
+        {{ diceLockedHint() }}
+      </div>
+    </div>
+  </main>
+
+  <!-- Netflix-style Modal -->
+  <div class="modal-backdrop" [class.active]="showModal()" (click)="closeModal()">
+    <div class="netflix-modal" (click)="$event.stopPropagation()" [class.show]="showModal()">
+      <button class="modal-close" (click)="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-content">
+        <div class="modal-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+
+        <h2 class="modal-title">Name This Country</h2>
+        <p class="modal-description">Enter your answer below</p>
+
+        <input
+          type="text"
+          [(ngModel)]="userAnswer"
+          [disabled]="isAnswered()"
+          placeholder="Type country name..."
+          class="modal-input"
+          (keyup.enter)="!isAnswered() && submitAnswer()"
+          autofocus
+        />
+
+        <div 
+          class="modal-message"
+          [class.success]="modalMessageType() === 'success'"
+          [class.error]="modalMessageType() === 'error'"
+          [class.neutral]="modalMessageType() === 'neutral'"
+          *ngIf="modalMessage()"
+        >
+          {{ modalMessage() }}
+        </div>
+
+        <div class="modal-actions">
+          <button 
+            *ngIf="!isAnswered()"
+            (click)="submitAnswer()" 
+            class="btn-netflix primary"
+          >
+            <span>Submit Answer</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          
+          <button 
+            *ngIf="!isAnswered()"
+            (click)="skipQuestion()" 
+            class="btn-netflix secondary"
+          >
+            Skip Question
+          </button>
+          
+          <button 
+            *ngIf="isAnswered()"
+            (click)="nextQuestion()" 
+            class="btn-netflix primary"
+          >
+            <span>Next Question</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
