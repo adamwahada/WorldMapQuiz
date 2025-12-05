@@ -37,13 +37,26 @@ export class App implements AfterViewInit {
   protected readonly activeRandomId = signal<string | null>(null);
   protected readonly diceLockedHint = signal('');
   protected readonly mapActive = signal(false);
+  protected readonly gameStarted = signal(false);
+  protected readonly gameFinished = signal(false);
+  protected readonly currentPlayerIdx = signal(0);
+  protected readonly players = signal<{ id: number; name: string; score: number }[]>([]);
+  protected readonly winnerIdx = signal<number | null>(null);
+  protected readonly difficultyMode = signal<'easy' | 'medium' | 'hard'>('easy');
+  protected readonly nextAction = signal<'pick' | 'random'>('pick');
+  protected readonly selectedPlayers = signal<2 | 3 | 4>(2);
+  protected readonly selectedDifficulty = signal<'easy' | 'medium' | 'hard'>('easy');
+  protected readonly selectedTimerMinutes = signal<number>(15);
+  protected readonly timerRemainingMs = signal<number>(0);
+  protected readonly globalEndTs = signal<number>(0);
+  private timerId: any = null;
   
   // Modal state
   protected readonly showModal = signal(false);
   protected readonly currentCountry = signal<CountryQuiz | null>(null);
   protected readonly userAnswer = signal('');
   protected readonly modalMessage = signal('');
-  protected readonly modalMessageType = signal<'success' | 'error' | 'neutral'>('neutral');
+  protected readonly modalMessageType = signal<'success' | 'error' | 'neutral' | 'winner'>('neutral');
   protected readonly isAnswered = signal(false);
   protected readonly selectedSvgPath = signal<SVGPathElement | null>(null);
   
@@ -71,6 +84,35 @@ export class App implements AfterViewInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     if (isPlatformBrowser(this.platformId)) {
       this.loadCountries();
+      try {
+        const rawSettings = localStorage.getItem('gameSettings');
+        const rawState = localStorage.getItem('gameState');
+        if (rawSettings && !rawState) {
+          const s = JSON.parse(rawSettings) as { players: 2|3|4; difficulty: 'easy'|'medium'|'hard'; minutes: number };
+          this.selectedPlayers.set(s.players);
+          this.selectedDifficulty.set(s.difficulty);
+          this.selectedTimerMinutes.set(s.minutes);
+          this.confirmSettings();
+        }
+        if (rawState) {
+          const st = JSON.parse(rawState) as any;
+          this.players.set(st.players || []);
+          this.currentPlayerIdx.set(st.currentPlayerIdx ?? 0);
+          this.gameStarted.set(!!st.gameStarted);
+          this.gameFinished.set(!!st.gameFinished);
+          this.winnerIdx.set(st.winnerIdx ?? null);
+          this.difficultyMode.set(st.difficultyMode || 'easy');
+          this.nextAction.set(st.nextAction || 'pick');
+          if (Array.isArray(st.countries)) this.countries.set(st.countries);
+          const now = Date.now();
+          if (st.globalEndTs && st.globalEndTs > now) {
+            this.startTimerFromEnd(st.globalEndTs);
+          }
+          if (st.turnEndTs && st.turnEndTs > now) {
+            this.startTurnTimerFromEnd(st.turnEndTs);
+          }
+        }
+      } catch {}
     }
   }
 
@@ -257,9 +299,139 @@ export class App implements AfterViewInit {
     this.updateSVGTransform();
   }
 
+  protected selectPlayers(count: 2 | 3 | 4): void { this.selectedPlayers.set(count); }
+  protected selectDifficulty(d: 'easy' | 'medium' | 'hard'): void { this.selectedDifficulty.set(d); }
+  protected selectTimerMinutes(m: number): void { this.selectedTimerMinutes.set(Math.max(1, Math.floor(m))); }
+
+  protected confirmSettings(): void {
+    const count = this.selectedPlayers();
+    const diff = this.selectedDifficulty();
+    const mins = this.selectedTimerMinutes();
+    const arr = Array.from({ length: count }, (_, i) => ({ id: i + 1, name: `Player ${i + 1}`, score: 0 }));
+    this.players.set(arr);
+    this.currentPlayerIdx.set(0);
+    this.gameStarted.set(true);
+    this.gameFinished.set(false);
+    this.winnerIdx.set(null);
+    this.difficultyMode.set(diff);
+    if (diff === 'easy') this.nextAction.set('pick');
+    else if (diff === 'medium') this.nextAction.set('pick');
+    else this.nextAction.set('random');
+    this.startTimer(mins * 60 * 1000);
+    this.startTurnTimer();
+  }
+
+  private startTimer(ms: number): void {
+    this.clearTimer();
+    const endTs = Date.now() + ms;
+    this.globalEndTs.set(endTs);
+    this.timerRemainingMs.set(ms);
+    this.timerId = setInterval(() => {
+      const left = Math.max(0, this.globalEndTs() - Date.now());
+      this.timerRemainingMs.set(left);
+      if (left <= 0) {
+        this.clearTimer();
+        this.finishGame();
+      }
+    }, 1000);
+  }
+
+  private startTimerFromEnd(endTs: number): void {
+    this.clearTimer();
+    this.globalEndTs.set(endTs);
+    const left = Math.max(0, endTs - Date.now());
+    this.timerRemainingMs.set(left);
+    this.timerId = setInterval(() => {
+      const l = Math.max(0, this.globalEndTs() - Date.now());
+      this.timerRemainingMs.set(l);
+      if (l <= 0) {
+        this.clearTimer();
+        this.finishGame();
+      }
+    }, 1000);
+    this.saveGameState();
+  }
+
+  private clearTimer(): void {
+    if (this.timerId) { clearInterval(this.timerId); this.timerId = null; }
+  }
+
+  protected readonly turnRemainingMs = signal<number>(20000);
+  private turnTimerId: any = null;
+  private startTurnTimer(): void {
+    this.clearTurnTimer();
+    const endTs = Date.now() + 20000;
+    localStorage.setItem('turnEndTs', String(endTs));
+    this.turnRemainingMs.set(20000);
+    this.turnTimerId = setInterval(() => {
+      const left = Math.max(0, (Number(localStorage.getItem('turnEndTs')) || 0) - Date.now());
+      this.turnRemainingMs.set(left);
+      if (left <= 0) {
+        this.clearTurnTimer();
+        this.modalMessage.set("⏱️ Time's up! Next player");
+        this.modalMessageType.set('neutral');
+        this.showModal.set(true);
+        this.nextQuestion();
+      }
+    }, 1000);
+  }
+
+  private startTurnTimerFromEnd(endTs: number): void {
+    this.clearTurnTimer();
+    localStorage.setItem('turnEndTs', String(endTs));
+    const left = Math.max(0, endTs - Date.now());
+    this.turnRemainingMs.set(left);
+    this.turnTimerId = setInterval(() => {
+      const l = Math.max(0, (Number(localStorage.getItem('turnEndTs')) || 0) - Date.now());
+      this.turnRemainingMs.set(l);
+      if (l <= 0) {
+        this.clearTurnTimer();
+        this.modalMessage.set("⏱️ Time's up! Next player");
+        this.modalMessageType.set('neutral');
+        this.showModal.set(true);
+        this.nextQuestion();
+      }
+    }, 1000);
+    this.saveGameState();
+  }
+  private clearTurnTimer(): void { if (this.turnTimerId) { clearInterval(this.turnTimerId); this.turnTimerId = null; } }
+
+  protected startGame(count: 2 | 3 | 4): void {
+    const arr = Array.from({ length: count }, (_, i) => ({ id: i + 1, name: `Player ${i + 1}`, score: 0 }));
+    this.players.set(arr);
+    this.currentPlayerIdx.set(0);
+    this.gameStarted.set(true);
+    this.gameFinished.set(false);
+    this.winnerIdx.set(null);
+  }
+
+  protected advanceTurn(): void {
+    const n = this.players().length;
+    if (n > 0) this.currentPlayerIdx.set((this.currentPlayerIdx() + 1) % n);
+  }
+
+  protected finishGame(): void {
+    const arr = this.players();
+    if (!arr.length) return;
+    let max = -Infinity;
+    let idx = 0;
+    arr.forEach((p, i) => { if (p.score > max) { max = p.score; idx = i; } });
+    this.winnerIdx.set(idx);
+    this.gameFinished.set(true);
+    this.modalMessage.set(`🏆 Winner: ${arr[idx].name} with ${arr[idx].score} points`);
+    this.modalMessageType.set('neutral');
+    this.showModal.set(true);
+    this.clearTimer();
+  }
+
   protected randomQuestion(): void {
     if (this.randomActive() && !this.isAnswered()) {
       this.diceLockedHint.set('Finish the current random country first');
+      setTimeout(() => this.diceLockedHint.set(''), 2000);
+      return;
+    }
+    if (this.gameStarted() && this.difficultyMode() === 'medium' && this.nextAction() === 'pick') {
+      this.diceLockedHint.set('Medium mode: random turn next, not now');
       setTimeout(() => this.diceLockedHint.set(''), 2000);
       return;
     }
@@ -444,6 +616,14 @@ export class App implements AfterViewInit {
     const country = id ? this.countries().find(c => c.id === id) : null;
 
     if (country) {
+      if (this.gameStarted() && this.difficultyMode() === 'hard' && !this.randomActive()) {
+        this.showTooltip(path, 'Hard mode: use the dice to play');
+        return;
+      }
+      if (this.gameStarted() && this.difficultyMode() === 'medium' && this.nextAction() === 'random' && !this.randomActive()) {
+        this.showTooltip(path, 'Medium mode: random turn — use the dice');
+        return;
+      }
       if (this.randomActive() && this.activeRandomId() && id !== this.activeRandomId()) {
         this.showTooltip(path, 'Finish the current random country first');
         return;
@@ -476,6 +656,8 @@ export class App implements AfterViewInit {
     this.selectedSvgPath.set(path);
   }
 
+  
+
   private showAlreadyAnsweredMessage(country: CountryQuiz): void {
     // Do nothing - modal won't open for already answered countries
     // The tooltip on hover provides the feedback instead
@@ -483,6 +665,15 @@ export class App implements AfterViewInit {
 
   protected closeModal(): void {
     this.showModal.set(false);
+    const activeId = this.activeRandomId();
+    const path = this.selectedSvgPath();
+    if (activeId && path) {
+      const country = this.countries().find(c => c.id === activeId);
+      if (country?.status === 'unanswered') {
+        // Keep yellow highlight until the user answers
+        return;
+      }
+    }
     this.clearPreviousHighlight();
   }
 
@@ -519,11 +710,20 @@ export class App implements AfterViewInit {
     const b = normalize(country.name);
     const distance = this.levenshtein(a, b);
     const threshold = Math.max(1, Math.floor(b.length * 0.2));
-    const isCorrect = a === b || distance <= threshold;
+    const isExact = a === b;
+    const isFuzzy = !isExact && distance <= threshold;
+    const isCorrect = isExact || isFuzzy;
 
     if (isCorrect) {
-      this.score.update(s => s + 3);
-      this.modalMessage.set('✓ Correct! +3 points');
+      const points = isExact ? 3 : 2;
+      if (this.gameStarted() && this.players().length) {
+        const idx = this.currentPlayerIdx();
+        const updated = this.players().map((p, i) => i === idx ? { ...p, score: p.score + points } : p);
+        this.players.set(updated);
+      } else {
+        this.score.update(s => s + points);
+      }
+      this.modalMessage.set(isExact ? '✓ Correct! +3 points' : '✓ Accepted with minor typo! +2 points');
       this.modalMessageType.set('success');
       this.colorizeCountry(true);
     } else {
@@ -546,9 +746,17 @@ export class App implements AfterViewInit {
     const path = this.selectedSvgPath();
     if (path && fresh) {
       this.updatePathColor(path, fresh);
+      path.removeAttribute('data-highlight');
+      path.style.filter = 'none';
     }
     this.randomActive.set(false);
     this.activeRandomId.set(null);
+    if (this.gameStarted() && this.difficultyMode() === 'medium') {
+      this.nextAction.set(this.nextAction() === 'pick' ? 'random' : 'pick');
+    }
+    if (this.gameStarted() && this.difficultyMode() === 'hard') {
+      this.nextAction.set('random');
+    }
   }
 
   private colorizeCountry(isCorrect: boolean): void {
@@ -572,11 +780,30 @@ export class App implements AfterViewInit {
     this.closeModal();
     this.randomActive.set(false);
     this.activeRandomId.set(null);
+    if (this.gameStarted() && this.difficultyMode() === 'medium') {
+      this.nextAction.set(this.nextAction() === 'pick' ? 'random' : 'pick');
+    }
+    if (this.gameStarted() && this.difficultyMode() === 'hard') {
+      this.nextAction.set('random');
+    }
   }
 
   protected nextQuestion(): void {
     this.closeModal();
+    if (this.gameStarted()) {
+      this.advanceTurn();
+      if (this.difficultyMode() === 'medium') {
+        this.nextAction.set(this.nextAction() === 'pick' ? 'random' : 'pick');
+      } else if (this.difficultyMode() === 'hard') {
+        this.nextAction.set('random');
+      } else {
+        this.nextAction.set('pick');
+      }
+      this.startTurnTimer();
+    }
   }
+
+  
 
   protected randomCountry(): void {
     // If a country is already selected and unanswered, don't pick another
@@ -637,5 +864,22 @@ export class App implements AfterViewInit {
       prevPath.removeAttribute('data-highlight');
       prevPath.style.filter = 'none';
     }
+  }
+  private saveGameState(): void {
+    try {
+      const state = {
+        players: this.players(),
+        currentPlayerIdx: this.currentPlayerIdx(),
+        gameStarted: this.gameStarted(),
+        gameFinished: this.gameFinished(),
+        winnerIdx: this.winnerIdx(),
+        difficultyMode: this.difficultyMode(),
+        nextAction: this.nextAction(),
+        countries: this.countries(),
+        globalEndTs: this.globalEndTs(),
+        turnEndTs: Number(localStorage.getItem('turnEndTs')) || 0
+      };
+      localStorage.setItem('gameState', JSON.stringify(state));
+    } catch {}
   }
 }

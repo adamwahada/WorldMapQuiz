@@ -22,13 +22,22 @@
 
       <!-- Stats Bar -->
       <div class="stats-bar">
-        <div class="stat-badge">
+        <div class="stat-badge" *ngIf="gameStarted(); else singleScore">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-award">
             <circle cx="12" cy="8" r="6"></circle>
             <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
           </svg>
-          <span class="stat-value">{{ score() }} pts</span>
+          <span class="stat-value">{{ players()[currentPlayerIdx()].name }}: {{ players()[currentPlayerIdx()].score }} pts</span>
         </div>
+        <ng-template #singleScore>
+          <div class="stat-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-award">
+              <circle cx="12" cy="8" r="6"></circle>
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+            </svg>
+            <span class="stat-value">{{ score() }} pts</span>
+          </div>
+        </ng-template>
         
         <div class="stat-badge">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-check">
@@ -45,7 +54,12 @@
           <span class="stat-value">{{ incorrectCount() }}</span>
         </div>
 
-        <button class="action-btn random-btn" (click)="randomQuestion()" [disabled]="randomActive() && !isAnswered()">
+        <button 
+          class="action-btn random-btn" 
+          (click)="randomQuestion()" 
+          [disabled]="(randomActive() && !isAnswered()) || (gameStarted() && difficultyMode()==='medium' && nextAction()==='pick')"
+          [matTooltip]="(randomActive() && !isAnswered()) ? 'Finish the current random country first' : (difficultyMode()==='medium' && nextAction()==='pick' ? 'Medium mode: random turn next, not now' : 'Pick a random unanswered country')"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
             <circle cx="9" cy="9" r="1"></circle>
@@ -55,21 +69,21 @@
           </svg>
         </button>
 
-        <button class="action-btn center-btn" (click)="resetView()">
+        <button class="action-btn center-btn" (click)="resetView()" matTooltip="Center map">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
             <circle cx="12" cy="12" r="10"></circle>
           </svg>
         </button>
 
-        <button class="action-btn" (click)="activateMap()" title="Activer la carte (zoom/drag)">
+        <button class="action-btn" (click)="activateMap()" matTooltip="Activer la carte (zoom/drag)">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 3l7 5-7 5V3z"></path>
             <path d="M10 8l11-5v18l-11-5"></path>
           </svg>
         </button>
 
-        <button class="action-btn" (click)="zoomIn()" title="Zoom +">
+        <button class="action-btn" (click)="zoomIn()" matTooltip="Zoom +">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="11" y1="8" x2="11" y2="14"></line>
@@ -78,13 +92,30 @@
           </svg>
         </button>
 
-        <button class="action-btn" (click)="zoomOut()" title="Zoom -">
+        <button class="action-btn" (click)="zoomOut()" matTooltip="Zoom -">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="8" y1="11" x2="14" y2="11"></line>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
+
+        <button class="action-btn" (click)="finishGame()" matTooltip="Finish game and show winner" [disabled]="!gameStarted()">Finish</button>
+
+        <div class="stat-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-clock">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span class="stat-value">{{ (timerRemainingMs() / 60000) | number:'1.0-0' }}:{{ ((timerRemainingMs() % 60000) / 1000) | number:'2.0-0' }}</span>
+        </div>
+
+        <div class="stat-badge" [class.active]="mapActive()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-map">
+            <polyline points="1 7 10 12 19 7 10 2 1 7"></polyline>
+          </svg>
+          <span class="stat-value">{{ mapActive() ? 'Map Active' : 'Map Off' }}</span>
+        </div>
       </div>
     </div>
   </header>
@@ -105,12 +136,25 @@
       <div class="dice-hint" *ngIf="diceLockedHint()">
         {{ diceLockedHint() }}
       </div>
+
+      <div class="players-board" *ngIf="gameStarted()">
+        <div class="players-list">
+          <div class="player-item" *ngFor="let p of players(); let i = index" [class.active]="i === currentPlayerIdx()">
+            <span class="player-name">{{ p.name }}</span>
+            <span class="player-score">{{ p.score }} pts</span>
+          </div>
+        </div>
+        <div class="turn-info">
+          <span>Current: {{ players()[currentPlayerIdx()].name }}</span>
+          <span>Turn: {{ (turnRemainingMs() / 1000) | number:'2.0-0' }}s</span>
+        </div>
+      </div>
     </div>
   </main>
 
   <!-- Netflix-style Modal -->
-  <div class="modal-backdrop" [class.active]="showModal()" (click)="closeModal()">
-    <div class="netflix-modal" (click)="$event.stopPropagation()" [class.show]="showModal()">
+      <div class="modal-backdrop" [class.active]="showModal()" (click)="closeModal()">
+    <div class="netflix-modal" (click)="$event.stopPropagation()" [class.show]="showModal()" [class.winner]="modalMessageType() === 'winner'">
       <button class="modal-close" (click)="closeModal()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -119,16 +163,17 @@
       </button>
 
       <div class="modal-content">
-        <div class="modal-icon">
+        <div class="modal-icon" *ngIf="modalMessageType() !== 'winner'">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
           </svg>
         </div>
 
-        <h2 class="modal-title">Name This Country</h2>
-        <p class="modal-description">Enter your answer below</p>
+        <h2 class="modal-title" *ngIf="modalMessageType() !== 'winner'">Name This Country</h2>
+        <h2 class="modal-title" *ngIf="modalMessageType() === 'winner'">Victory</h2>
+        <p class="modal-description" *ngIf="modalMessageType() !== 'winner'">Enter your answer below</p>
 
-        <input
+        <input *ngIf="modalMessageType() !== 'winner'"
           type="text"
           [(ngModel)]="userAnswer"
           [disabled]="isAnswered()"
@@ -148,7 +193,7 @@
           {{ modalMessage() }}
         </div>
 
-        <div class="modal-actions">
+        <div class="modal-actions" *ngIf="modalMessageType() !== 'winner'">
           <button 
             *ngIf="!isAnswered()"
             (click)="submitAnswer()" 
@@ -179,9 +224,19 @@
             </svg>
           </button>
         </div>
+        <div class="modal-actions winner-actions" *ngIf="modalMessageType() === 'winner'">
+          <button class="btn-netflix primary" (click)="closeModal()">Close</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 
+        <div class="stat-badge big-timer" *ngIf="gameStarted()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-clock">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span class="stat-value big">{{ (timerRemainingMs() / 60000) | number:'1.0-0' }}:{{ ((timerRemainingMs() % 60000) / 1000) | number:'2.0-0' }}</span>
+        </div>
