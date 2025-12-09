@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { GameEntryComponent } from './components/game-entry.component';
+import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root-shell',
+  selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  template: `<router-outlet></router-outlet>`
+  imports: [RouterModule, RouterOutlet],
+  template: `
+    <h1>World Quiz</h1>
+    <router-outlet></router-outlet>
+  `,
 })
 export class RootComponent {}
-

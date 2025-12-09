@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { StartComponent } from './start.component';
-import { App } from './app';
+import { GameEntryComponent } from './components/game-entry.component';
+import { QuizComponent } from './components/quiz.component';
 
 export const routes: Routes = [
-  { path: '', component: StartComponent },
-  { path: 'game', component: App },
+  { path: '', component: GameEntryComponent },
+  { path: 'game', component: QuizComponent },
   { path: '**', redirectTo: '' }
 ];
