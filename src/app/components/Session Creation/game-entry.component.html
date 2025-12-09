@@ -1,0 +1,190 @@
+<div class="landing-page" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
+  <!-- Netflix-style Header -->
+  <header class="netflix-header">
+    <div class="header-container">
+      <div class="logo-section">
+        <!-- Premium Logo -->
+        <div class="logo-wrapper">
+          <div class="logo-glow"></div>
+          <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+              <path d="M2 12h20"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-name">GeoQuiz</h1>
+          <p class="brand-subtitle">WORLD EDITION</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <select 
+          [ngModel]="language()"
+          (ngModelChange)="language.set($event)"
+          class="language-select"
+        >
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="ar">العربية</option>
+        </select>
+        <button 
+          class="btn-netflix secondary"
+          (click)="showLoginModal.set(true)"
+        >
+          {{ t.login }}
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-pattern"></div>
+    
+    <div class="hero-content">
+      <h2 class="hero-title">{{ t.title }}</h2>
+      <p class="hero-subtitle">{{ t.subtitle }}</p>
+      <button 
+        class="btn-netflix primary hero-cta"
+        (click)="showSessionModal.set(true)"
+      >
+        <span>{{ t.cta }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+  <!-- Session Modal -->
+  <div class="modal-backdrop" [class.active]="showSessionModal()" (click)="closeSessionModal()">
+    <div class="netflix-modal session-modal" (click)="$event.stopPropagation()" [class.show]="showSessionModal()">
+      <button class="modal-close" (click)="closeSessionModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-content session-content">
+        <div class="modal-header">
+          <div class="logo-wrapper small">
+            <div class="logo-glow"></div>
+            <div class="logo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                <path d="M2 12h20"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="brand-text">
+            <h2 class="modal-title">GeoQuiz</h2>
+            <p class="modal-description">{{ t.subtitle }}</p>
+          </div>
+        </div>
+
+        <!-- Players -->
+        <div class="session-section">
+          <h3 class="section-title">{{ t.players }}</h3>
+          <div class="button-group">
+            <button class="action-btn" [class.active]="players===2" (click)="players=2">2</button>
+            <button class="action-btn" [class.active]="players===3" (click)="players=3">3</button>
+            <button class="action-btn" [class.active]="players===4" (click)="players=4">4</button>
+          </div>
+        </div>
+
+        <!-- Difficulty -->
+        <div class="session-section">
+          <h3 class="section-title">{{ t.difficulty }}</h3>
+          <div class="button-group">
+            <button class="action-btn" [class.active]="difficulty==='easy'" (click)="difficulty='easy'">{{ t.easy }}</button>
+            <button class="action-btn" [class.active]="difficulty==='medium'" (click)="difficulty='medium'">{{ t.medium }}</button>
+            <button class="action-btn" [class.active]="difficulty==='hard'" (click)="difficulty='hard'">{{ t.hard }}</button>
+          </div>
+          <p class="section-note">{{ t.diffNote }}</p>
+        </div>
+
+        <!-- Timer -->
+        <div class="session-section">
+          <h3 class="section-title">{{ t.timer }}</h3>
+          <div class="button-group">
+            <button class="action-btn" [class.active]="minutes===15" (click)="minutes=15">15 min</button>
+            <div class="input-wrapper">
+              <label class="input-label">{{ t.custom }}</label>
+              <input type="number" min="1" [(ngModel)]="minutes" class="modal-input small" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="session-actions">
+          <div class="input-group">
+            <label class="input-label">{{ t.yourName }}</label>
+            <input type="text" [(ngModel)]="playerName" class="modal-input" placeholder="Enter your name..." />
+          </div>
+
+          <button class="btn-netflix primary full-width" (click)="createSession()">
+            <span>{{ t.createSession }}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <div class="divider">
+            <span>{{ t.or }}</span>
+          </div>
+
+          <div class="join-group">
+            <div class="input-group flex-1">
+              <label class="input-label">{{ t.joinCode }}</label>
+              <input type="text" [(ngModel)]="joinGameId" class="modal-input" placeholder="Enter code..." />
+            </div>
+            <button class="btn-netflix secondary" (click)="joinSession()">
+              {{ t.joinSession }}
+            </button>
+          </div>
+
+          <p class="error-message" *ngIf="errorMsg">{{ errorMsg }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal-backdrop" [class.active]="showLoginModal()" (click)="closeLoginModal()">
+    <div class="netflix-modal login-modal" (click)="$event.stopPropagation()" [class.show]="showLoginModal()">
+      <button class="modal-close" (click)="closeLoginModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">{{ t.login }}</h2>
+          <p class="modal-description">{{ t.loginDesc }}</p>
+        </div>
+        
+        <div class="session-actions">
+          <div class="input-group">
+            <label class="input-label">{{ t.email }}</label>
+            <input type="email" class="modal-input" placeholder="your@email.com" />
+          </div>
+          <div class="input-group">
+            <label class="input-label">{{ t.password }}</label>
+            <input type="password" class="modal-input" placeholder="••••••••" />
+          </div>
+          <button class="btn-netflix primary full-width">
+            {{ t.login }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

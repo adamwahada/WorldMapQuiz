@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GameEntryComponent } from './components/game-entry.component';
+import { GameEntryComponent } from './components/Session Creation/game-entry.component';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -7,7 +7,6 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterModule, RouterOutlet],
   template: `
-    <h1>World Quiz</h1>
     <router-outlet></router-outlet>
   `,
 })
