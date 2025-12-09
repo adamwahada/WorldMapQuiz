@@ -20,10 +20,6 @@ if (typeof window !== 'undefined') {
   db = getFirestore(app);
   auth = getAuth(app);
 
-  // --- Optional: sign in anonymously ---
-  signInAnonymously(auth)
-    .then(() => console.log('Signed in anonymously'))
-    .catch((err) => console.error('Firebase auth error:', err));
 
   // --- Bootstrap Angular app (client) ---
   bootstrapApplication(RootComponent, appConfig)

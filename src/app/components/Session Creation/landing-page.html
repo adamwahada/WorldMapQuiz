@@ -1,0 +1,283 @@
+<div class="landing-page" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
+  <!-- Hero Section with Integrated Header -->
+  <main class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-pattern"></div>
+    
+    <!-- Integrated Header -->
+    <div class="integrated-header">
+      <div class="logo-section">
+        <!-- Premium Logo -->
+        <div class="logo-wrapper">
+          <div class="logo-glow"></div>
+          <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+              <path d="M2 12h20"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-name">GeoQuiz</h1>
+          <p class="brand-subtitle">WORLD EDITION</p>
+        </div>
+      </div>
+
+<div class="header-actions">
+  <select 
+    [ngModel]="language()"
+    (ngModelChange)="language.set($event)"
+    class="language-select"
+  >
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+    <option value="ar">العربية</option>
+  </select>
+
+  <!-- Show login button if not logged in -->
+<button 
+  *ngIf="!isLoggedIn"
+  class="btn-netflix primary"
+  (click)="showLoginModal.set(true)"
+>
+  {{ t.login }}
+</button>
+
+  <!-- Show user avatar if logged in -->
+<div *ngIf="isLoggedIn" class="user-avatar" (click)="toggleAccountMenu()" style="position:relative;">
+  <div class="user-initials">{{ userInitials }}</div>
+  <div class="account-menu" *ngIf="showAccountMenu()" style="position:absolute; right:0; top:44px; background:#0b0b0b; padding:8px; border-radius:6px; min-width:140px; box-shadow:0 6px 18px rgba(0,0,0,0.3);">
+    <div style="padding:8px 10px; cursor:pointer;" (click)="logoutAccount()">Log out</div>
+  </div>
+</div>
+</div>
+
+    </div>
+
+    <div class="hero-content">
+      <h2 class="hero-title">{{ t.title }}</h2>
+      <p class="hero-subtitle">{{ t.subtitle }}</p>
+      <button 
+        class="btn-netflix primary hero-cta"
+        (click)="showSessionModal.set(true)"
+      >
+        <span>{{ t.cta }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+  <!-- Session Modal -->
+  <div class="modal-backdrop" [class.active]="showSessionModal()" (click)="closeSessionModal()">
+    <div class="netflix-modal session-modal" (click)="$event.stopPropagation()" [class.show]="showSessionModal()">
+      <button class="modal-close" (click)="closeSessionModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-content session-content">
+        <div class="modal-header">
+          <div class="logo-wrapper small">
+            <div class="logo-glow"></div>
+            <div class="logo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                <path d="M2 12h20"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="brand-text">
+            <h2 class="modal-title">GeoQuiz</h2>
+            <p class="modal-description">{{ t.subtitle }}</p>
+          </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+          <button 
+            class="tab-btn" 
+            [class.active]="sessionMode()==='create'"
+            (click)="sessionMode.set('create')"
+          >
+            {{ t.createSession }}
+          </button>
+          <button 
+            class="tab-btn" 
+            [class.active]="sessionMode()==='join'"
+            (click)="sessionMode.set('join')"
+          >
+            {{ t.joinSession }}
+          </button>
+        </div>
+
+        <!-- Create Session Tab -->
+        <div class="tab-content" *ngIf="sessionMode()==='create'">
+          <!-- Players -->
+          <div class="session-section">
+            <h3 class="section-title">{{ t.players }}</h3>
+            <div class="button-group">
+              <button class="action-btn" [class.active]="players===2" (click)="players=2">2</button>
+              <button class="action-btn" [class.active]="players===3" (click)="players=3">3</button>
+              <button class="action-btn" [class.active]="players===4" (click)="players=4">4</button>
+            </div>
+          </div>
+
+          <!-- Difficulty -->
+          <div class="session-section">
+            <h3 class="section-title">{{ t.difficulty }}</h3>
+            <div class="button-group">
+              <button class="action-btn" [class.active]="difficulty==='easy'" (click)="difficulty='easy'">{{ t.easy }}</button>
+              <button class="action-btn" [class.active]="difficulty==='medium'" (click)="difficulty='medium'">{{ t.medium }}</button>
+              <button class="action-btn" [class.active]="difficulty==='hard'" (click)="difficulty='hard'">{{ t.hard }}</button>
+            </div>
+            <p class="section-note">{{ t.diffNote }}</p>
+          </div>
+
+          <!-- Timer -->
+          <div class="session-section">
+            <h3 class="section-title">{{ t.timer }}</h3>
+            <div class="button-group">
+              <button class="action-btn" [class.active]="minutes===15 && !customTimer()" (click)="setTimer(15)">15 min</button>
+              <button class="action-btn" [class.active]="minutes===30 && !customTimer()" (click)="setTimer(30)">30 min</button>
+              <button class="action-btn" [class.active]="minutes===45 && !customTimer()" (click)="setTimer(45)">45 min</button>
+              <button class="action-btn" [class.active]="customTimer()" (click)="toggleCustomTimer()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="16"></line>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                {{ t.customize }}
+              </button>
+            </div>
+            <div class="custom-timer-input" *ngIf="customTimer()">
+              <input 
+                type="number" 
+                min="1" 
+                [(ngModel)]="minutes" 
+                class="modal-input small" 
+                [placeholder]="t.enterMinutes"
+              />
+            </div>
+          </div>
+
+          <!-- Session Name -->
+          <div class="session-section">
+            <h3 class="section-title">{{ t.sessionName }}</h3>
+            <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder" />
+          </div>
+
+          <!-- Create Button -->
+          <button class="btn-netflix primary full-width" (click)="attemptCreate()">
+            <span>{{ t.createSession }}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <p class="error-message" *ngIf="errorMsg">{{ errorMsg }}</p>
+        </div>
+
+        <!-- Join Session Tab -->
+        <div class="tab-content" *ngIf="sessionMode()==='join'">
+          <div class="join-content">
+            <div class="join-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                <polyline points="10 17 15 12 10 7"></polyline>
+                <line x1="15" y1="12" x2="3" y2="12"></line>
+              </svg>
+            </div>
+
+            <div class="session-section">
+              <h3 class="section-title">{{ t.enterCode }}</h3>
+              <input 
+                type="text" 
+                [(ngModel)]="joinGameId" 
+                class="modal-input code-input" 
+                [placeholder]="t.codePlaceholder"
+              />
+            </div>
+
+            <div class="session-section">
+              <h3 class="section-title">{{ t.sessionName }}</h3>
+              <input 
+                type="text" 
+                [(ngModel)]="playerName" 
+                class="modal-input" 
+                [placeholder]="t.sessionNamePlaceholder"
+              />
+            </div>
+
+            <button class="btn-netflix primary full-width" (click)="attemptJoin()">
+              <span>{{ t.validateAndJoin }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+
+            <p class="error-message" *ngIf="errorMsg">{{ errorMsg }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Login Modal -->
+<div class="modal-backdrop" [class.active]="showLoginModal()" (click)="closeLoginModal()">
+  <div class="netflix-modal login-modal" (click)="$event.stopPropagation()" [class.show]="showLoginModal()">
+    <button class="modal-close" (click)="closeLoginModal()">
+      ✕
+    </button>
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">{{ t.login }}</h2>
+      </div>
+
+      <div class="session-actions">
+        <div class="input-group">
+          <label class="input-label">{{ t.email }}</label>
+          <input type="email" [(ngModel)]="email" class="modal-input" placeholder="your@email.com" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">{{ t.password }}</label>
+          <input type="password" [(ngModel)]="password" class="modal-input" placeholder="••••••••" />
+        </div>
+        <button class="btn-netflix primary full-width" (click)="onLogin()">
+          {{ t.login }}
+        </button>
+        <p class="error-message" *ngIf="loginError">{{ loginError }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Auth Choice Modal (Sign in or Play as Guest) -->
+<div class="modal-backdrop" [class.active]="showAuthChoiceModal()" (click)="showAuthChoiceModal.set(false)">
+  <div class="netflix-modal auth-choice-modal" (click)="$event.stopPropagation()" [class.show]="showAuthChoiceModal()">
+    <button class="modal-close" (click)="showAuthChoiceModal.set(false)">
+      ✕
+    </button>
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">{{ t.login }}</h2>
+        <p class="modal-description">Please sign in to keep your progress, or continue as a guest for this session only.</p>
+      </div>
+
+      <div class="session-actions">
+        <button class="btn-netflix primary full-width" (click)="openSignInFromChoice()">{{ t.login }}</button>
+        <div style="height:12px"></div>
+        <button class="btn-netflix secondary full-width" (click)="playAsGuestAndProceed()">Play as Guest</button>
+      </div>
+    </div>
+  </div>
+</div>

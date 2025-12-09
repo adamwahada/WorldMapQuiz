@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GameEntryComponent } from './components/Session Creation/game-entry.component';
+import { LandingPageComponent } from './components/Session Creation/landing-page';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({

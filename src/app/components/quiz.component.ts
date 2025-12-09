@@ -1,4 +1,6 @@
-import { Component, signal, effect, ViewChild, ElementRef, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, signal, effect, ViewChild, ElementRef, AfterViewInit, PLATFORM_ID, Inject, OnDestroy } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +23,7 @@ interface CountryQuiz extends Country {
   standalone: true,
   imports: [CommonModule, FormsModule, MatButtonModule, MatTooltipModule, MatIconModule]
 })
-export class QuizComponent implements AfterViewInit {
+export class QuizComponent implements AfterViewInit, OnDestroy {
   protected readonly score = signal(0);
   protected readonly totalQuestions = signal(0);
   protected readonly correctCount = signal(0);
@@ -75,7 +77,10 @@ export class QuizComponent implements AfterViewInit {
   @ViewChild('svgContainer') svgContainer!: ElementRef;
   @ViewChild('svgEmbed') svgEmbed!: ElementRef;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  private _routerSub: any = null;
+  private _beforeUnloadHandler: any = null;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private auth: AuthService, private router: Router) {
     if (isPlatformBrowser(this.platformId)) {
       this.loadCountries();
       try {
@@ -107,7 +112,35 @@ export class QuizComponent implements AfterViewInit {
           }
         }
       } catch {}
+      // Subscribe to router events to detect navigation away from the game route
+      try {
+        this._routerSub = this.router.events.subscribe((ev: any) => {
+          if (ev instanceof NavigationStart) {
+            // if navigating away from /game route, attempt to delete anonymous guest user
+            if (!ev.url.startsWith('/game')) {
+              void this.auth.deleteAnonymousIfGuest();
+            }
+          }
+        });
+      } catch {}
+
+      // Attempt cleanup on tab/window close
+      try {
+        this._beforeUnloadHandler = () => { void this.auth.deleteAnonymousIfGuest(); };
+        window.addEventListener('beforeunload', this._beforeUnloadHandler);
+      } catch {}
     }
+  }
+
+  ngOnDestroy(): void {
+    try {
+      if (this._routerSub && typeof this._routerSub.unsubscribe === 'function') this._routerSub.unsubscribe();
+    } catch {}
+    try {
+      if (this._beforeUnloadHandler) window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+    } catch {}
+    // final attempt to delete anonymous guest
+    try { void this.auth.deleteAnonymousIfGuest(); } catch {}
   }
 
   ngAfterViewInit(): void {
