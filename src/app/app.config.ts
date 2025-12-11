@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,9 +14,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideAnimations(),
-    
-    // Add these two for HttpClient and Forms
-    provideHttpClient(withFetch()),       // enable fetch adapter for SSR
-    importProvidersFrom(FormsModule)      // allows [(ngModel)] in templates
+
+    provideHttpClient(withFetch()),       
+    importProvidersFrom(FormsModule),     
+    importProvidersFrom(ToastrModule.forRoot()) 
   ]
 };

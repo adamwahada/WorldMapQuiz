@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -7,11 +7,12 @@ import { GameService, GameSession, Player, GameSettings } from '../../services/g
 import { User } from 'firebase/auth';
 import { LanguageService } from '../../services/language.service';
 import { translations, Translations } from './translations';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './landing-page.html',
   styleUrls: ['./landing-page.scss']
 })
@@ -39,7 +40,6 @@ export class LandingPageComponent {
   minutes = 15;
   playerName = '';
   joinGameCode = '';
-  errorMsg = '';
 
   // ---------------------
   // Login inputs
@@ -55,7 +55,8 @@ export class LandingPageComponent {
     public router: Router,
     private auth: AuthService,
     private games: GameService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private toastr: ToastrService
   ) {
     this.language.set(this.languageService.getLanguage());
 
@@ -152,41 +153,59 @@ export class LandingPageComponent {
   // ---------------------
   // Create session
   // ---------------------
-  async createSession(): Promise<void> {
-    this.errorMsg = '';
-    this.loading.set(true);
-    this.persistSettings();
+async createSession(): Promise<void> {
+  this.loading.set(true);
+  this.persistSettings();
 
-    if (!this.playerName.trim()) {
-      this.errorMsg = 'Please enter a session name';
+  if (!this.playerName.trim()) {
+    this.toastr.error('Please enter a session name', 'Error');
+    this.loading.set(false);
+    return;
+  }
+
+  try {
+    const settings: GameSettings = {
+      players: this.players,
+      difficulty: this.difficulty,
+      minutes: Math.max(1, Math.floor(this.minutes))
+    };
+    const maxPlayers = this.players;
+
+    // Check if user already joined a session
+    const joinedGameId = localStorage.getItem('gameId');
+    if (joinedGameId) {
+      this.toastr.error('You have already joined a session!', 'Error');
       this.loading.set(false);
       return;
     }
 
-    try {
-      const settings: GameSettings = {
-        players: this.players,
-        difficulty: this.difficulty,
-        minutes: Math.max(1, Math.floor(this.minutes))
-      };
-      const maxPlayers = this.players;
+    // Debug: log current user and params
+    console.log('Attempting to create game:', {
+      playerName: this.playerName.trim(),
+      settings,
+      maxPlayers,
+      currentUser: this.auth.currentUser$ ? this.auth.currentUser$ : null
+    });
 
-      const { gameId, code } = await this.games.createGame(this.playerName.trim(), settings, maxPlayers);
+    const { gameId, code } = await this.games.createGame(this.playerName.trim(), settings, maxPlayers);
 
-      localStorage.setItem('gameId', gameId);
-      localStorage.setItem('gameCode', code);
+    localStorage.setItem('gameId', gameId);
+    localStorage.setItem('gameCode', code);
 
-      // Navigate to waiting room
-      this.router.navigate(['/waiting-room', gameId]);
-    } catch (e: any) {
-      this.errorMsg = e.message || 'Could not create session';
-      console.error(e);
-    } finally {
-      this.loading.set(false);
-    }
+    this.router.navigate(['/waiting-room', gameId]);
+  } catch (e: any) {
+    // Debug: log error to console
+    console.error('Create session error:', e);
+    this.toastr.error(e.message || 'Could not create session');
+  } finally {
+    this.loading.set(false);
   }
+}
+
 
   attemptCreate(): void {
+    // Always log when the button is clicked
+    console.log('Create Session button clicked');
     if (this.isLoggedIn) {
       void this.createSession();
       return;
@@ -198,42 +217,38 @@ export class LandingPageComponent {
   // ---------------------
   // Join session
   // ---------------------
-  async joinSession(): Promise<void> {
-    this.errorMsg = '';
-    this.persistSettings();
-    const code = this.joinGameCode.trim();
+async joinSession(): Promise<void> {
+  this.persistSettings();
 
-    if (!code) {
-      this.errorMsg = 'Enter a valid join code';
-      return;
-    }
-
-    if (!this.playerName.trim()) {
-      this.errorMsg = 'Please enter session name';
-      return;
-    }
-
-    this.loading.set(true);
-
-try {
-  const { gameId, players, status } = await this.games.joinGameByCode(code, this.playerName.trim());
-
-  localStorage.setItem('gameId', gameId);  // ✅ now this is a string
-  localStorage.setItem('gameCode', code);
-
-  // You could also store players/status if needed
-  localStorage.setItem('gamePlayers', JSON.stringify(players));
-  localStorage.setItem('gameStatus', status);
-
-  // Navigate to waiting room
-  this.router.navigate(['/waiting-room', gameId]);
-} catch (e: any) {
-  this.errorMsg = e.message || 'Could not join session';
-  console.error(e);
-} finally {
-      this.loading.set(false);
-    }
+  if (!this.joinGameCode.trim()) {
+    this.toastr.error('Enter a valid join code');
+    return;
   }
+
+  if (!this.playerName.trim()) {
+    this.toastr.error('Please enter session name');
+    return;
+  }
+
+  const joinedGameId = localStorage.getItem('gameId');
+  if (joinedGameId) {
+    this.toastr.error('You have already joined a session!');
+    return;
+  }
+
+  this.loading.set(true);
+  try {
+    const { gameId } = await this.games.joinGameByCode(this.joinGameCode.trim(), this.playerName.trim());
+    localStorage.setItem('gameId', gameId);
+    localStorage.setItem('gameCode', this.joinGameCode.trim());
+
+    this.router.navigate(['/waiting-room', gameId]);
+  } catch (e: any) {
+    this.toastr.error(e.message || 'Could not join session', 'Error');
+  } finally {
+    this.loading.set(false);
+  }
+}
 
   attemptJoin(): void {
     if (this.isLoggedIn) {
@@ -275,29 +290,28 @@ try {
     this.showLoginModal.set(true);
   }
 
-  async onLogin(): Promise<void> {
-    this.loginError = '';
-
-    if (!this.email.trim() || !this.password.trim()) {
-      this.loginError = 'Please enter both email and password';
-      return;
-    }
-
-    try {
-      await this.auth.login(this.email.trim(), this.password.trim());
-      this.closeLoginModal();
-      this.router.navigate(['/']);
-    } catch (err: any) {
-      this.loginError = err.message || 'Login failed';
-    }
+async onLogin(): Promise<void> {
+  if (!this.email.trim() || !this.password.trim()) {
+    this.toastr.error('Please enter both email and password', 'Login Error');
+    return;
   }
+
+  try {
+    await this.auth.login(this.email.trim(), this.password.trim());
+    this.closeLoginModal();
+    this.router.navigate(['/']);
+  } catch (err: any) {
+    const message = err.message || 'Login failed';
+    this.toastr.error(message, 'Login Error');
+  }
+}
+
 
   // ---------------------
   // Close modals
   // ---------------------
   closeSessionModal() {
     this.showSessionModal.set(false);
-    this.errorMsg = '';
     this.sessionMode.set('create');
   }
 

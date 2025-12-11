@@ -1,17 +1,16 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { importProvidersFrom } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { RootComponent } from './app/root.component';
 import { appConfig } from './app/app.config';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ToastrModule } from 'ngx-toastr';
 
-// --- Firebase imports ---
+// Firebase stuff
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { firebaseConfig } from './environments/firebase';
 
-// --- Initialize Firestore and Auth (browser-only) ---
 export let db: any;
 export let auth: any;
 
@@ -20,12 +19,20 @@ if (typeof window !== 'undefined') {
   db = getFirestore(app);
   auth = getAuth(app);
 
-  // --- Bootstrap Angular app (client) with animations ---
   bootstrapApplication(RootComponent, {
     ...appConfig,
     providers: [
+      provideZoneChangeDetection(),
       ...(appConfig.providers || []),
-      provideAnimationsAsync()   // ← Add this
+      provideAnimationsAsync(),
+      importProvidersFrom(
+        ToastrModule.forRoot({ 
+          timeOut: 3000,
+          positionClass: 'toast-top-right',
+          preventDuplicates: true,
+          progressBar: true
+        })
+      )
     ]
   }).catch(err => console.error(err));
 }

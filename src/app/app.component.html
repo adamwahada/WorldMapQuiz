@@ -22,14 +22,15 @@
 
       <!-- Stats Bar -->
       <div class="stats-bar">
-        <div class="stat-badge" *ngIf="gameStarted(); else singleScore">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-award">
-            <circle cx="12" cy="8" r="6"></circle>
-            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
-          </svg>
-          <span class="stat-value">{{ players()[currentPlayerIdx()].name }}: {{ players()[currentPlayerIdx()].score }} pts</span>
-        </div>
-        <ng-template #singleScore>
+        @if (gameStarted()) {
+          <div class="stat-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-award">
+              <circle cx="12" cy="8" r="6"></circle>
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+            </svg>
+            <span class="stat-value">{{ players()[currentPlayerIdx()].name }}: {{ players()[currentPlayerIdx()].score }} pts</span>
+          </div>
+        } @else {
           <div class="stat-badge">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-award">
               <circle cx="12" cy="8" r="6"></circle>
@@ -37,15 +38,15 @@
             </svg>
             <span class="stat-value">{{ score() }} pts</span>
           </div>
-        </ng-template>
-        
+        }
+
         <div class="stat-badge">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-check">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
           <span class="stat-value">{{ correctCount() }}/{{ totalQuestions() }}</span>
         </div>
-        
+
         <div class="stat-badge">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-x">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -54,12 +55,12 @@
           <span class="stat-value">{{ incorrectCount() }}</span>
         </div>
 
-        <button 
-          class="action-btn random-btn" 
-          (click)="randomQuestion()" 
+        <button
+          class="action-btn random-btn"
+          (click)="randomQuestion()"
           [disabled]="(randomActive() && !isAnswered()) || (gameStarted() && difficultyMode()==='medium' && nextAction()==='pick')"
           [matTooltip]="(randomActive() && !isAnswered()) ? 'Finish the current random country first' : (difficultyMode()==='medium' && nextAction()==='pick' ? 'Medium mode: random turn next, not now' : 'Pick a random unanswered country')"
-        >
+          >
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
             <circle cx="9" cy="9" r="1"></circle>
@@ -124,36 +125,42 @@
   <main class="map-section" #svgContainer>
     <div class="map-hero">
       <div class="hero-overlay"></div>
-      
+
       <div class="hero-content">
         <h2 class="hero-title">Explore the World</h2>
         <p class="hero-subtitle">Test your geography knowledge • Click on any country to begin</p>
       </div>
 
       <div #svgEmbed class="svg-container"></div>
-      
 
-      <div class="dice-hint" *ngIf="diceLockedHint()">
-        {{ diceLockedHint() }}
-      </div>
 
-      <div class="players-board" *ngIf="gameStarted()">
-        <div class="players-list">
-          <div class="player-item" *ngFor="let p of players(); let i = index" [class.active]="i === currentPlayerIdx()">
-            <span class="player-name">{{ p.name }}</span>
-            <span class="player-score">{{ p.score }} pts</span>
+      @if (diceLockedHint()) {
+        <div class="dice-hint">
+          {{ diceLockedHint() }}
+        </div>
+      }
+
+      @if (gameStarted()) {
+        <div class="players-board">
+          <div class="players-list">
+            @for (p of players(); track p; let i = $index) {
+              <div class="player-item" [class.active]="i === currentPlayerIdx()">
+                <span class="player-name">{{ p.name }}</span>
+                <span class="player-score">{{ p.score }} pts</span>
+              </div>
+            }
+          </div>
+          <div class="turn-info">
+            <span>Current: {{ players()[currentPlayerIdx()].name }}</span>
+            <span>Turn: {{ (turnRemainingMs() / 1000) | number:'2.0-0' }}s</span>
           </div>
         </div>
-        <div class="turn-info">
-          <span>Current: {{ players()[currentPlayerIdx()].name }}</span>
-          <span>Turn: {{ (turnRemainingMs() / 1000) | number:'2.0-0' }}s</span>
-        </div>
-      </div>
+      }
     </div>
   </main>
 
   <!-- Netflix-style Modal -->
-      <div class="modal-backdrop" [class.active]="showModal()" (click)="closeModal()">
+  <div class="modal-backdrop" [class.active]="showModal()" (click)="closeModal()">
     <div class="netflix-modal" (click)="$event.stopPropagation()" [class.show]="showModal()" [class.winner]="modalMessageType() === 'winner'">
       <button class="modal-close" (click)="closeModal()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -163,80 +170,98 @@
       </button>
 
       <div class="modal-content">
-        <div class="modal-icon" *ngIf="modalMessageType() !== 'winner'">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </div>
-
-        <h2 class="modal-title" *ngIf="modalMessageType() !== 'winner'">Name This Country</h2>
-        <h2 class="modal-title" *ngIf="modalMessageType() === 'winner'">Victory</h2>
-        <p class="modal-description" *ngIf="modalMessageType() !== 'winner'">Enter your answer below</p>
-
-        <input *ngIf="modalMessageType() !== 'winner'"
-          type="text"
-          [(ngModel)]="userAnswer"
-          [disabled]="isAnswered()"
-          placeholder="Type country name..."
-          class="modal-input"
-          (keyup.enter)="!isAnswered() && submitAnswer()"
-          autofocus
-        />
-
-        <div 
-          class="modal-message"
-          [class.success]="modalMessageType() === 'success'"
-          [class.error]="modalMessageType() === 'error'"
-          [class.neutral]="modalMessageType() === 'neutral'"
-          *ngIf="modalMessage()"
-        >
-          {{ modalMessage() }}
-        </div>
-
-        <div class="modal-actions" *ngIf="modalMessageType() !== 'winner'">
-          <button 
-            *ngIf="!isAnswered()"
-            (click)="submitAnswer()" 
-            class="btn-netflix primary"
-          >
-            <span>Submit Answer</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
+        @if (modalMessageType() !== 'winner') {
+          <div class="modal-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
             </svg>
-          </button>
-          
-          <button 
-            *ngIf="!isAnswered()"
-            (click)="skipQuestion()" 
-            class="btn-netflix secondary"
-          >
-            Skip Question
-          </button>
-          
-          <button 
-            *ngIf="isAnswered()"
-            (click)="nextQuestion()" 
-            class="btn-netflix primary"
-          >
-            <span>Next Question</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
-        <div class="modal-actions winner-actions" *ngIf="modalMessageType() === 'winner'">
-          <button class="btn-netflix primary" (click)="closeModal()">Close</button>
-        </div>
+          </div>
+        }
+
+        @if (modalMessageType() !== 'winner') {
+          <h2 class="modal-title">Name This Country</h2>
+        }
+        @if (modalMessageType() === 'winner') {
+          <h2 class="modal-title">Victory</h2>
+        }
+        @if (modalMessageType() !== 'winner') {
+          <p class="modal-description">Enter your answer below</p>
+        }
+
+        @if (modalMessageType() !== 'winner') {
+          <input
+            type="text"
+            [(ngModel)]="userAnswer"
+            [disabled]="isAnswered()"
+            placeholder="Type country name..."
+            class="modal-input"
+            (keyup.enter)="!isAnswered() && submitAnswer()"
+            autofocus
+            />
+        }
+
+        @if (modalMessage()) {
+          <div
+            class="modal-message"
+            [class.success]="modalMessageType() === 'success'"
+            [class.error]="modalMessageType() === 'error'"
+            [class.neutral]="modalMessageType() === 'neutral'"
+            >
+            {{ modalMessage() }}
+          </div>
+        }
+
+        @if (modalMessageType() !== 'winner') {
+          <div class="modal-actions">
+            @if (!isAnswered()) {
+              <button
+                (click)="submitAnswer()"
+                class="btn-netflix primary"
+                >
+                <span>Submit Answer</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            }
+            @if (!isAnswered()) {
+              <button
+                (click)="skipQuestion()"
+                class="btn-netflix secondary"
+                >
+                Skip Question
+              </button>
+            }
+            @if (isAnswered()) {
+              <button
+                (click)="nextQuestion()"
+                class="btn-netflix primary"
+                >
+                <span>Next Question</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            }
+          </div>
+        }
+        @if (modalMessageType() === 'winner') {
+          <div class="modal-actions winner-actions">
+            <button class="btn-netflix primary" (click)="closeModal()">Close</button>
+          </div>
+        }
       </div>
     </div>
   </div>
 </div>
 
 
-        <div class="stat-badge big-timer" *ngIf="gameStarted()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-clock">
-            <circle cx="12" cy="12" r="10" />
-            <polyline points="12 6 12 12 16 14" />
-          </svg>
-          <span class="stat-value big">{{ (timerRemainingMs() / 60000) | number:'1.0-0' }}:{{ ((timerRemainingMs() % 60000) / 1000) | number:'2.0-0' }}</span>
-        </div>
+@if (gameStarted()) {
+  <div class="stat-badge big-timer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-clock">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+    <span class="stat-value big">{{ (timerRemainingMs() / 60000) | number:'1.0-0' }}:{{ ((timerRemainingMs() % 60000) / 1000) | number:'2.0-0' }}</span>
+  </div>
+}

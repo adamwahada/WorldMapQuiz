@@ -3,11 +3,10 @@
   <main class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-pattern"></div>
-    
+
     <!-- Integrated Header -->
     <div class="integrated-header">
       <div class="logo-section" (click)="router.navigate(['/'])" style="cursor:pointer;">
-        <!-- Premium Logo -->
         <div class="logo-wrapper">
           <div class="logo-glow"></div>
           <div class="logo-icon">
@@ -25,29 +24,31 @@
       </div>
 
       <div class="header-actions">
-        <select 
-          [ngModel]="language()"
-          (ngModelChange)="selectLanguage($event)"
-          class="language-select"
-        >
+        <select [ngModel]="language()" (ngModelChange)="selectLanguage($event)" class="language-select">
           <option value="en">English</option>
           <option value="fr">Français</option>
           <option value="ar">العربية</option>
         </select>
 
-        <div *ngIf="!isLoggedIn" class="auth-buttons">
-          <button class="btn-netflix primary2" (click)="showLoginModal.set(true)">{{ t.login }}</button>
-          <button class="btn-netflix primary" (click)="navigateToSignup()">{{ t.signup }}</button>
-        </div>
+        @if (!isLoggedIn) {
+          <div class="auth-buttons">
+            <button class="btn-netflix primary2" (click)="showLoginModal.set(true)">{{ t.login }}</button>
+            <button class="btn-netflix primary" (click)="navigateToSignup()">{{ t.signup }}</button>
+          </div>
+        }
 
-        <div *ngIf="isLoggedIn" class="user-avatar-wrapper">
-          <div class="user-avatar" (click)="toggleAccountMenu()">
-            <div class="user-initials">{{ userInitials }}</div>
+        @if (isLoggedIn) {
+          <div class="user-avatar-wrapper">
+            <div class="user-avatar" (click)="toggleAccountMenu()">
+              <div class="user-initials">{{ userInitials }}</div>
+            </div>
+            @if (showAccountMenu()) {
+              <div class="account-dropdown" @fadeInOut>
+                <div class="dropdown-item" (click)="logoutAccount()">{{ t.logout }}</div>
+              </div>
+            }
           </div>
-          <div class="account-dropdown" *ngIf="showAccountMenu()" @fadeInOut>
-            <div class="dropdown-item" (click)="logoutAccount()">{{ t.logout }}</div>
-          </div>
-        </div>
+        }
       </div>
     </div>
 
@@ -98,89 +99,89 @@
         </div>
 
         <!-- Create Session Tab -->
-        <div class="tab-content" *ngIf="sessionMode()==='create'">
-          <!-- Players -->
-          <div class="session-section">
-            <h3 class="section-title">{{ t.players }}</h3>
-            <div class="button-group">
-              <button class="action-btn" [class.active]="players===2" (click)="players=2">2</button>
-              <button class="action-btn" [class.active]="players===3" (click)="players=3">3</button>
-              <button class="action-btn" [class.active]="players===4" (click)="players=4">4</button>
-            </div>
-          </div>
-
-          <!-- Difficulty -->
-          <div class="session-section">
-            <h3 class="section-title">{{ t.difficulty }}</h3>
-            <div class="button-group">
-              <button class="action-btn" [class.active]="difficulty==='easy'" (click)="difficulty='easy'">{{ t.easy }}</button>
-              <button class="action-btn" [class.active]="difficulty==='medium'" (click)="difficulty='medium'">{{ t.medium }}</button>
-              <button class="action-btn" [class.active]="difficulty==='hard'" (click)="difficulty='hard'">{{ t.hard }}</button>
-            </div>
-            <p class="section-note">{{ t.diffNote }}</p>
-          </div>
-
-          <!-- Timer -->
-          <div class="session-section">
-            <h3 class="section-title">{{ t.timer }}</h3>
-            <div class="button-group">
-              <button class="action-btn" [class.active]="minutes===15 && !customTimer()" (click)="setTimer(15)">15 min</button>
-              <button class="action-btn" [class.active]="minutes===30 && !customTimer()" (click)="setTimer(30)">30 min</button>
-              <button class="action-btn" [class.active]="minutes===45 && !customTimer()" (click)="setTimer(45)">45 min</button>
-              <button class="action-btn" [class.active]="customTimer()" (click)="toggleCustomTimer()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="16"></line>
-                  <line x1="8" y1="12" x2="16" y2="12"></line>
-                </svg>
-                {{ t.customize }}
-              </button>
-            </div>
-            <div class="custom-timer-input" *ngIf="customTimer()">
-              <input type="number" min="1" [(ngModel)]="minutes" class="modal-input small" [placeholder]="t.enterMinutes"/>
-            </div>
-          </div>
-
-          <!-- Session Name -->
-          <div class="session-section">
-            <h3 class="section-title">{{ t.sessionName }}</h3>
-            <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
-          </div>
-
-          <!-- Create Button -->
-          <button class="btn-netflix primary full-width" (click)="attemptCreate()">
-            <span>{{ t.createSession }}</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-
-          <p class="error-message" *ngIf="errorMsg">{{ errorMsg }}</p>
-        </div>
-
-        <!-- Join Session Tab -->
-        <div class="tab-content" *ngIf="sessionMode()==='join'">
-          <div class="join-content">
+        @if (sessionMode()==='create') {
+          <div class="tab-content">
+            <!-- Players -->
             <div class="session-section">
-              <h3 class="section-title">{{ t.enterCode }}</h3>
-              <input type="text" [(ngModel)]="joinGameCode" class="modal-input code-input" [placeholder]="t.codePlaceholder"/>
+              <h3 class="section-title">{{ t.players }}</h3>
+              <div class="button-group">
+                <button class="action-btn" [class.active]="players===2" (click)="players=2">2</button>
+                <button class="action-btn" [class.active]="players===3" (click)="players=3">3</button>
+                <button class="action-btn" [class.active]="players===4" (click)="players=4">4</button>
+              </div>
             </div>
 
+            <!-- Difficulty -->
+            <div class="session-section">
+              <h3 class="section-title">{{ t.difficulty }}</h3>
+              <div class="button-group">
+                <button class="action-btn" [class.active]="difficulty==='easy'" (click)="difficulty='easy'">{{ t.easy }}</button>
+                <button class="action-btn" [class.active]="difficulty==='medium'" (click)="difficulty='medium'">{{ t.medium }}</button>
+                <button class="action-btn" [class.active]="difficulty==='hard'" (click)="difficulty='hard'">{{ t.hard }}</button>
+              </div>
+              <p class="section-note">{{ t.diffNote }}</p>
+            </div>
+
+            <!-- Timer -->
+            <div class="session-section">
+              <h3 class="section-title">{{ t.timer }}</h3>
+              <div class="button-group">
+                <button class="action-btn" [class.active]="minutes===15 && !customTimer()" (click)="setTimer(15)">15 min</button>
+                <button class="action-btn" [class.active]="minutes===30 && !customTimer()" (click)="setTimer(30)">30 min</button>
+                <button class="action-btn" [class.active]="minutes===45 && !customTimer()" (click)="setTimer(45)">45 min</button>
+                <button class="action-btn" [class.active]="customTimer()" (click)="toggleCustomTimer()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                  </svg>
+                  {{ t.customize }}
+                </button>
+              </div>
+              @if (customTimer()) {
+                <div class="custom-timer-input">
+                  <input type="number" min="1" [(ngModel)]="minutes" class="modal-input small" [placeholder]="t.enterMinutes"/>
+                </div>
+              }
+            </div>
+
+            <!-- Session Name -->
             <div class="session-section">
               <h3 class="section-title">{{ t.sessionName }}</h3>
               <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
             </div>
 
-            <button class="btn-netflix primary full-width" (click)="attemptJoin()">
-              <span>{{ t.validateAndJoin }}</span>
+            <!-- Create Button -->
+            <button class="btn-netflix primary full-width" (click)="attemptCreate()">
+              <span>{{ t.createSession }}</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
+                <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
-
-            <p class="error-message" *ngIf="errorMsg">{{ errorMsg }}</p>
           </div>
-        </div>
+        }
+
+        <!-- Join Session Tab -->
+        @if (sessionMode()==='join') {
+          <div class="tab-content">
+            <div class="join-content">
+              <div class="session-section">
+                <h3 class="section-title">{{ t.enterCode }}</h3>
+                <input type="text" [(ngModel)]="joinGameCode" class="modal-input code-input" [placeholder]="t.codePlaceholder"/>
+              </div>
+              <div class="session-section">
+                <h3 class="section-title">{{ t.sessionName }}</h3>
+                <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
+              </div>
+              <button class="btn-netflix primary full-width" (click)="attemptJoin()">
+                <span>{{ t.validateAndJoin }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
   </div>
@@ -204,27 +205,13 @@
         <div class="session-actions">
           <div class="input-group">
             <label class="input-label">{{ t.email }}</label>
-            <input 
-              type="email" 
-              [(ngModel)]="email" 
-              class="modal-input" 
-              [placeholder]="t.emailPlaceholder"
-              (keyup.enter)="onLogin()"
-            />
+            <input type="email" [(ngModel)]="email" class="modal-input" [placeholder]="t.emailPlaceholder" (keyup.enter)="onLogin()"/>
           </div>
           <div class="input-group">
             <label class="input-label">{{ t.password }}</label>
-            <input 
-              type="password" 
-              [(ngModel)]="password" 
-              class="modal-input" 
-              [placeholder]="t.passwordPlaceholder"
-              (keyup.enter)="onLogin()"
-            />
+            <input type="password" [(ngModel)]="password" class="modal-input" [placeholder]="t.passwordPlaceholder" (keyup.enter)="onLogin()"/>
           </div>
-          
-          <p class="error-message" *ngIf="loginError">{{ loginError }}</p>
-          
+
           <button class="btn-netflix primary full-width" (click)="onLogin()">
             {{ t.login }}
           </button>
@@ -241,7 +228,7 @@
     </div>
   </div>
 
-  <!-- Auth Choice Modal (Sign in or Play as Guest) -->
+  <!-- Auth Choice Modal -->
   <div class="modal-backdrop" [class.active]="showAuthChoiceModal()" (click)="showAuthChoiceModal.set(false)">
     <div class="netflix-modal auth-choice-modal" (click)="$event.stopPropagation()" [class.show]="showAuthChoiceModal()">
       <button class="modal-close" (click)="showAuthChoiceModal.set(false)">

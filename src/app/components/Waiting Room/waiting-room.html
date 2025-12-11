@@ -23,31 +23,38 @@
   <div class="player-list">
     <h3>Players in Room</h3>
     <ul>
-      <li *ngFor="let player of gameData()?.players | keyvalue" [@playerAnim]>
-        {{ player.value.name }}
-      </li>
+      @for (player of gameData()?.players | keyvalue; track player) {
+        <li [@playerAnim]>
+          {{ player.value.name }}
+        </li>
+      }
     </ul>
   </div>
 
   <!-- Notifications -->
   <div class="notification-wrapper">
-    <div *ngIf="newJoinNotification()" class="notification join" [@fadeInOut]>
-      {{ newJoinNotification() }}
-    </div>
-    <div *ngIf="maxPlayersReached()" class="notification max" [@fadeInOut]>
-      Max players reached! Creator can start the game.
-    </div>
+    @if (newJoinNotification()) {
+      <div class="notification join" [@fadeInOut]>
+        {{ newJoinNotification() }}
+      </div>
+    }
+    @if (maxPlayersReached()) {
+      <div class="notification max" [@fadeInOut]>
+        Max players reached! Creator can start the game.
+      </div>
+    }
   </div>
 
   <!-- Actions -->
   <div class="waiting-actions">
     <button class="btn btn-leave" (click)="leaveRoom()">Leave Room</button>
-    <button 
-      *ngIf="currentUser()?.uid === gameData()?.ownerId && Object.keys(gameData()?.players || {}).length >= 2" 
-      class="btn btn-start"
-      (click)="startGame()"
-    >
-      Start Game
-    </button>
+    @if (currentUser()?.uid === gameData()?.ownerId && Object.keys(gameData()?.players || {}).length >= 2) {
+      <button
+        class="btn btn-start"
+        (click)="startGame()"
+        >
+        Start Game
+      </button>
+    }
   </div>
 </div>
