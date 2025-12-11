@@ -6,7 +6,7 @@
     
     <!-- Integrated Header -->
     <div class="integrated-header">
-      <div class="logo-section">
+      <div class="logo-section" (click)="router.navigate(['/'])" style="cursor:pointer;">
         <!-- Premium Logo -->
         <div class="logo-wrapper">
           <div class="logo-glow"></div>
@@ -35,43 +35,26 @@
           <option value="ar">العربية</option>
         </select>
 
-        <!-- Show Sign In and Sign Up buttons if not logged in -->
         <div *ngIf="!isLoggedIn" class="auth-buttons">
-          <button 
-            class="btn-netflix primary2"
-            (click)="showLoginModal.set(true)"
-          >
-            {{ t.login }}
-          </button>
-          <button 
-            class="btn-netflix primary"
-            (click)="navigateToSignup()"
-          >
-            {{ t.signup }}
-          </button>
+          <button class="btn-netflix primary2" (click)="showLoginModal.set(true)">{{ t.login }}</button>
+          <button class="btn-netflix primary" (click)="navigateToSignup()">{{ t.signup }}</button>
         </div>
 
-        <!-- Show user avatar if logged in -->
         <div *ngIf="isLoggedIn" class="user-avatar-wrapper">
           <div class="user-avatar" (click)="toggleAccountMenu()">
             <div class="user-initials">{{ userInitials }}</div>
           </div>
-
           <div class="account-dropdown" *ngIf="showAccountMenu()" @fadeInOut>
             <div class="dropdown-item" (click)="logoutAccount()">{{ t.logout }}</div>
           </div>
         </div>
-
       </div>
     </div>
 
     <div class="hero-content">
       <h2 class="hero-title">{{ t.title }}</h2>
       <p class="hero-subtitle">{{ t.subtitle }}</p>
-      <button 
-        class="btn-netflix primary hero-cta"
-        (click)="showSessionModal.set(true)"
-      >
+      <button class="btn-netflix primary hero-cta" (click)="showSessionModal.set(true)">
         <span>{{ t.cta }}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
@@ -110,20 +93,8 @@
 
         <!-- Tab Navigation -->
         <div class="tab-navigation">
-          <button 
-            class="tab-btn" 
-            [class.active]="sessionMode()==='create'"
-            (click)="sessionMode.set('create')"
-          >
-            {{ t.createSession }}
-          </button>
-          <button 
-            class="tab-btn" 
-            [class.active]="sessionMode()==='join'"
-            (click)="sessionMode.set('join')"
-          >
-            {{ t.joinSession }}
-          </button>
+          <button class="tab-btn" [class.active]="sessionMode()==='create'" (click)="sessionMode.set('create')">{{ t.createSession }}</button>
+          <button class="tab-btn" [class.active]="sessionMode()==='join'" (click)="sessionMode.set('join')">{{ t.joinSession }}</button>
         </div>
 
         <!-- Create Session Tab -->
@@ -166,20 +137,14 @@
               </button>
             </div>
             <div class="custom-timer-input" *ngIf="customTimer()">
-              <input 
-                type="number" 
-                min="1" 
-                [(ngModel)]="minutes" 
-                class="modal-input small" 
-                [placeholder]="t.enterMinutes"
-              />
+              <input type="number" min="1" [(ngModel)]="minutes" class="modal-input small" [placeholder]="t.enterMinutes"/>
             </div>
           </div>
 
           <!-- Session Name -->
           <div class="session-section">
             <h3 class="section-title">{{ t.sessionName }}</h3>
-            <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder" />
+            <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
           </div>
 
           <!-- Create Button -->
@@ -196,32 +161,14 @@
         <!-- Join Session Tab -->
         <div class="tab-content" *ngIf="sessionMode()==='join'">
           <div class="join-content">
-            <div class="join-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                <polyline points="10 17 15 12 10 7"></polyline>
-                <line x1="15" y1="12" x2="3" y2="12"></line>
-              </svg>
-            </div>
-
             <div class="session-section">
               <h3 class="section-title">{{ t.enterCode }}</h3>
-              <input 
-                type="text" 
-                [(ngModel)]="joinGameId" 
-                class="modal-input code-input" 
-                [placeholder]="t.codePlaceholder"
-              />
+              <input type="text" [(ngModel)]="joinGameCode" class="modal-input code-input" [placeholder]="t.codePlaceholder"/>
             </div>
 
             <div class="session-section">
               <h3 class="section-title">{{ t.sessionName }}</h3>
-              <input 
-                type="text" 
-                [(ngModel)]="playerName" 
-                class="modal-input" 
-                [placeholder]="t.sessionNamePlaceholder"
-              />
+              <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
             </div>
 
             <button class="btn-netflix primary full-width" (click)="attemptJoin()">

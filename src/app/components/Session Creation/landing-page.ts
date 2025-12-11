@@ -1,13 +1,13 @@
-import { Component, signal , TRANSLATIONS } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { GameService } from '../../services/game.service';
+import { GameService, GameSession, Player, GameSettings } from '../../services/game.service';
 import { User } from 'firebase/auth';
 import { LanguageService } from '../../services/language.service';
 import { translations, Translations } from './translations';
+
 @Component({
   selector: 'app-landing',
   standalone: true,
@@ -16,44 +16,50 @@ import { translations, Translations } from './translations';
   styleUrls: ['./landing-page.scss']
 })
 export class LandingPageComponent {
-  // Language and current user
+
+  // ---------------------
+  // Signals / state
+  // ---------------------
   language = signal<'en' | 'fr' | 'ar'>('en');
   currentUser = signal<User | null>(null);
 
-  // Modals
   showSessionModal = signal(false);
   showLoginModal = signal(false);
   showAuthChoiceModal = signal(false);
   showAccountMenu = signal(false);
   sessionMode = signal<'create' | 'join'>('create');
   customTimer = signal(false);
+  loading = signal(false);
 
+  // ---------------------
   // Game/session settings
+  // ---------------------
   players: 2 | 3 | 4 = 2;
   difficulty: 'easy' | 'medium' | 'hard' = 'easy';
   minutes = 15;
   playerName = '';
-  joinGameId = '';
+  joinGameCode = '';
   errorMsg = '';
 
+  // ---------------------
   // Login inputs
+  // ---------------------
   email = '';
   password = '';
   loginError = '';
 
-  // Track an intended action when user must choose auth vs guest
+  // Track intended action for guest login
   pendingAction: 'create' | 'join' | null = null;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private auth: AuthService,
     private games: GameService,
     private languageService: LanguageService
   ) {
-    // Initialize language from service
     this.language.set(this.languageService.getLanguage());
 
-    // Listen to auth changes
+    // Subscribe to auth changes
     this.auth.currentUser$.subscribe(user => this.currentUser.set(user));
   }
 
@@ -65,9 +71,9 @@ export class LandingPageComponent {
     this.languageService.setLanguage(lang);
   }
 
-get t(): Translations {
-  return translations[this.language()]; // ✅ use lowercase
-}
+  get t(): Translations {
+    return translations[this.language()];
+  }
 
   get isRTL(): boolean {
     return this.language() === 'ar';
@@ -80,7 +86,7 @@ get t(): Translations {
     this.showAccountMenu.set(!this.showAccountMenu());
   }
 
-  get isGuest() {
+  get isGuest(): boolean {
     try { return sessionStorage.getItem('guest') === '1'; } catch { return false; }
   }
 
@@ -92,6 +98,8 @@ get t(): Translations {
       } else {
         await this.auth.logout();
       }
+      localStorage.clear();
+      sessionStorage.clear();
     } catch (e) {
       console.error('Logout error', e);
     }
@@ -102,8 +110,7 @@ get t(): Translations {
   }
 
   get userInitials(): string {
-    if (!this.currentUser()?.email) return '';
-    const email = this.currentUser()!.email!;
+    const email = this.currentUser()?.email || '';
     const parts = email.split('@')[0].split(/[.\-_]/);
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
@@ -129,26 +136,10 @@ get t(): Translations {
   }
 
   // ---------------------
-  // Modals
-  // ---------------------
-  closeSessionModal() {
-    this.showSessionModal.set(false);
-    this.errorMsg = '';
-    this.sessionMode.set('create');
-  }
-
-  closeLoginModal() {
-    this.showLoginModal.set(false);
-    this.email = '';
-    this.password = '';
-    this.loginError = '';
-  }
-
-  // ---------------------
   // Persist settings
   // ---------------------
   private persistSettings(): void {
-    const settings = {
+    const settings: GameSettings = {
       players: this.players,
       difficulty: this.difficulty,
       minutes: Math.max(1, Math.floor(this.minutes))
@@ -159,31 +150,39 @@ get t(): Translations {
   }
 
   // ---------------------
-  // Session creation
+  // Create session
   // ---------------------
   async createSession(): Promise<void> {
     this.errorMsg = '';
+    this.loading.set(true);
     this.persistSettings();
 
     if (!this.playerName.trim()) {
       this.errorMsg = 'Please enter a session name';
+      this.loading.set(false);
       return;
     }
 
     try {
-      const settings = {
+      const settings: GameSettings = {
         players: this.players,
         difficulty: this.difficulty,
         minutes: Math.max(1, Math.floor(this.minutes))
       };
-      const gameId = await this.games.createGame(this.playerName.trim(), settings);
-      try {
-        localStorage.setItem('gameId', gameId);
-      } catch {}
-      this.router.navigate(['/game']);
+      const maxPlayers = this.players;
+
+      const { gameId, code } = await this.games.createGame(this.playerName.trim(), settings, maxPlayers);
+
+      localStorage.setItem('gameId', gameId);
+      localStorage.setItem('gameCode', code);
+
+      // Navigate to waiting room
+      this.router.navigate(['/waiting-room', gameId]);
     } catch (e: any) {
-      this.errorMsg = 'Could not create session';
+      this.errorMsg = e.message || 'Could not create session';
       console.error(e);
+    } finally {
+      this.loading.set(false);
     }
   }
 
@@ -202,9 +201,9 @@ get t(): Translations {
   async joinSession(): Promise<void> {
     this.errorMsg = '';
     this.persistSettings();
-    const gid = this.joinGameId.trim();
+    const code = this.joinGameCode.trim();
 
-    if (!gid) {
+    if (!code) {
       this.errorMsg = 'Enter a valid join code';
       return;
     }
@@ -214,15 +213,25 @@ get t(): Translations {
       return;
     }
 
-    try {
-      await this.games.joinGame(gid, this.playerName.trim());
-      try {
-        localStorage.setItem('gameId', gid);
-      } catch {}
-      this.router.navigate(['/game']);
-    } catch (e: any) {
-      this.errorMsg = 'Could not join session';
-      console.error(e);
+    this.loading.set(true);
+
+try {
+  const { gameId, players, status } = await this.games.joinGameByCode(code, this.playerName.trim());
+
+  localStorage.setItem('gameId', gameId);  // ✅ now this is a string
+  localStorage.setItem('gameCode', code);
+
+  // You could also store players/status if needed
+  localStorage.setItem('gamePlayers', JSON.stringify(players));
+  localStorage.setItem('gameStatus', status);
+
+  // Navigate to waiting room
+  this.router.navigate(['/waiting-room', gameId]);
+} catch (e: any) {
+  this.errorMsg = e.message || 'Could not join session';
+  console.error(e);
+} finally {
+      this.loading.set(false);
     }
   }
 
@@ -241,7 +250,7 @@ get t(): Translations {
   async playAsGuestAndProceed(): Promise<void> {
     try {
       await this.auth.loginAnonymously();
-      try { sessionStorage.setItem('guest', '1'); } catch {}
+      sessionStorage.setItem('guest', '1');
       this.showAuthChoiceModal.set(false);
 
       if (this.pendingAction === 'create') {
@@ -251,8 +260,8 @@ get t(): Translations {
       }
     } catch (e) {
       console.error('Guest login failed', e);
-      this.showAuthChoiceModal.set(false);
       this.loginError = 'Could not start guest session';
+      this.showAuthChoiceModal.set(false);
     } finally {
       this.pendingAction = null;
     }
@@ -281,5 +290,21 @@ get t(): Translations {
     } catch (err: any) {
       this.loginError = err.message || 'Login failed';
     }
+  }
+
+  // ---------------------
+  // Close modals
+  // ---------------------
+  closeSessionModal() {
+    this.showSessionModal.set(false);
+    this.errorMsg = '';
+    this.sessionMode.set('create');
+  }
+
+  closeLoginModal() {
+    this.showLoginModal.set(false);
+    this.email = '';
+    this.password = '';
+    this.loginError = '';
   }
 }

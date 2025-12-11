@@ -1,0 +1,53 @@
+<div class="waiting-room-container">
+  <!-- Hero section / header style -->
+  <div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-pattern"></div>
+    <div class="header">
+      <div class="logo">
+        <h1>GeoQuiz</h1>
+        <span>WORLD EDITION</span>
+      </div>
+      <div class="session-info">
+        <div class="countdown">
+          <span>{{ countdown() | number:'2.0-0' }}</span> seconds left
+        </div>
+        <div class="slots">
+          Remaining slots: {{ remainingSlots }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Player list -->
+  <div class="player-list">
+    <h3>Players in Room</h3>
+    <ul>
+      <li *ngFor="let player of gameData()?.players | keyvalue" [@playerAnim]>
+        {{ player.value.name }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Notifications -->
+  <div class="notification-wrapper">
+    <div *ngIf="newJoinNotification()" class="notification join" [@fadeInOut]>
+      {{ newJoinNotification() }}
+    </div>
+    <div *ngIf="maxPlayersReached()" class="notification max" [@fadeInOut]>
+      Max players reached! Creator can start the game.
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="waiting-actions">
+    <button class="btn btn-leave" (click)="leaveRoom()">Leave Room</button>
+    <button 
+      *ngIf="currentUser()?.uid === gameData()?.ownerId && Object.keys(gameData()?.players || {}).length >= 2" 
+      class="btn btn-start"
+      (click)="startGame()"
+    >
+      Start Game
+    </button>
+  </div>
+</div>
