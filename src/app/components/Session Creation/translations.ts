@@ -5,6 +5,7 @@ export interface Translations {
   login: string;
   signup: string;
   newUser: string;
+  welcomeBack: string;
   chooseAccount: string;
   guest: string;
   logout: string;
@@ -27,6 +28,8 @@ export interface Translations {
   email: string;
   password: string;
   or: string;
+  emailPlaceholder: string;
+  passwordPlaceholder: string;
 }
 
 export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
@@ -37,6 +40,7 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     login: 'Sign In',
     signup: 'Sign Up',
     newUser: 'New to GeoQuiz?',
+    welcomeBack: 'Welcome back to GeoQuiz',
     chooseAccount: 'Choose your account',
     guest: 'Play as Guest',
     logout: 'Log out',
@@ -58,7 +62,9 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     validateAndJoin: 'Validate & Join',
     email: 'Email',
     password: 'Password',
-    or: 'or'
+    or: 'or',
+    emailPlaceholder: 'your@email.com',
+    passwordPlaceholder: '••••••••'
   },
   fr: {
     title: 'Quiz de Géographie Illimités, et Bien Plus',
@@ -67,6 +73,7 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     login: "S'identifier",
     signup: "S'inscrire",
     newUser: 'Nouveau sur GeoQuiz ?',
+    welcomeBack: 'Bon retour sur GeoQuiz',
     chooseAccount: 'Choisissez votre compte',
     guest: 'Jouer en invité',
     logout: 'Se déconnecter',
@@ -88,7 +95,9 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     validateAndJoin: 'Valider et Rejoindre',
     email: 'Email',
     password: 'Mot de passe',
-    or: 'ou'
+    or: 'ou',
+    emailPlaceholder: 'votre@email.com',
+    passwordPlaceholder: '••••••••'
   },
   ar: {
     title: 'اختبارات جغرافيا غير محدودة، وأكثر من ذلك',
@@ -97,6 +106,7 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     login: 'تسجيل الدخول',
     signup: 'إنشاء حساب',
     newUser: 'جديد على GeoQuiz؟',
+    welcomeBack: 'مرحبًا بعودتك إلى GeoQuiz',
     chooseAccount: 'اختر حسابك',
     guest: 'اللعب كضيف',
     logout: 'تسجيل الخروج',
@@ -118,6 +128,8 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     validateAndJoin: 'التحقق والانضمام',
     email: 'البريد الإلكتروني',
     password: 'كلمة المرور',
-    or: 'أو'
+    or: 'أو',
+    emailPlaceholder: 'اسم@مثال.com',
+    passwordPlaceholder: '••••••••'
   }
 };

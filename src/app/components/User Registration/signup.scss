@@ -482,3 +482,38 @@
   left: 1rem;
   right: auto;
 }
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+
+  &:hover {
+    .brand-name,
+    .brand-subtitle {
+      color: #e50914;       // highlight color (Netflix red style)
+      text-shadow: 0 0 8px rgba(229, 9, 20, 0.6); // subtle glow
+    }
+
+    .logo-icon svg {
+      stroke: #e50914;      // highlight SVG lines
+      filter: drop-shadow(0 0 4px rgba(229, 9, 20, 0.5));
+    }
+  }
+
+  .logo-wrapper {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+}
+

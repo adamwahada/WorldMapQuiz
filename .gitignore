@@ -43,6 +43,6 @@ __screenshots__/
 Thumbs.db
 
 #variable environment files
-/src/app/firebase.ts
+/src/environments/firebase.ts
 
 

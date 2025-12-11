@@ -26,8 +26,8 @@ function passwordValidator(control: AbstractControl): ValidationErrors | null {
   selector: 'app-signup',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  templateUrl: './signup.html',
+  styleUrls: ['./signup.scss']
 })
 export class SignupComponent {
   signupForm: FormGroup;

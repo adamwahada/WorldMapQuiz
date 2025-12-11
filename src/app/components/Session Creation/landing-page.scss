@@ -21,11 +21,13 @@
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
-  padding: 0.85rem 1rem;
+  padding: 0 1rem;
   border-radius: 4px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
   width: 100%;
+  height: 40px;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
@@ -394,6 +396,23 @@
   }
 }
 
+/* Link-style button (match signup styles) */
+.link-button {
+  background: none;
+  border: none;
+  color: #e50914;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #8b9ff5;
+    text-decoration: underline;
+  }
+}
+
 .action-btn {
   padding: 0.75rem 1.5rem;
   background: rgba(255, 255, 255, 0.1);
@@ -659,15 +678,23 @@
   font-weight: 500;
 }
 
+.signup-prompt{
+  font-size: 0.95rem;
+  color: #b3b3b3;
+  font-weight: 500;
+}
+
 .modal-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 0.85rem 1rem;
+  background: rgba(224, 218, 218, 0.129);
+  border: 1px solid rgba(220, 212, 212, 0.2);
+  color: rgba(232, 229, 229, 0.945);
+  padding: 0 1rem;
   border-radius: 4px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
   width: 100%;
+  height: 40px;
+  box-sizing: border-box;
 
   &:focus {
     outline: none;

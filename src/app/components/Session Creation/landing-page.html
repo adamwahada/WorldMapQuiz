@@ -58,7 +58,7 @@
           </div>
 
           <div class="account-dropdown" *ngIf="showAccountMenu()" @fadeInOut>
-            <div class="dropdown-item" (click)="logoutAccount()">Log out</div>
+            <div class="dropdown-item" (click)="logoutAccount()">{{ t.logout }}</div>
           </div>
         </div>
 
@@ -251,7 +251,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h2 class="modal-title">{{ t.login }}</h2>
-          <p class="modal-description">Welcome back to GeoQuiz</p>
+          <p class="modal-description">{{ t.welcomeBack }}</p>
         </div>
 
         <div class="session-actions">
@@ -261,7 +261,7 @@
               type="email" 
               [(ngModel)]="email" 
               class="modal-input" 
-              placeholder="your@email.com"
+              [placeholder]="t.emailPlaceholder"
               (keyup.enter)="onLogin()"
             />
           </div>
@@ -271,7 +271,7 @@
               type="password" 
               [(ngModel)]="password" 
               class="modal-input" 
-              placeholder="••••••••"
+              [placeholder]="t.passwordPlaceholder"
               (keyup.enter)="onLogin()"
             />
           </div>
@@ -285,8 +285,8 @@
           <!-- Sign Up Link -->
           <div class="modal-footer">
             <p class="signup-prompt">
-              New to GeoQuiz? 
-              <button class="link-button" (click)="navigateToSignup()">Create an account</button>
+              {{ t.newUser }}
+              <button class="link-button" (click)="navigateToSignup()">{{ t.signup }}</button>
             </p>
           </div>
         </div>
@@ -306,7 +306,7 @@
 
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title">Choose your account</h2>
+          <h2 class="modal-title">{{ t.chooseAccount }}</h2>
         </div>
 
         <div class="session-actions">
@@ -314,7 +314,7 @@
           <div style="height:12px"></div>
           <button class="btn-netflix primary full-width" (click)="navigateToSignup()">{{ t.signup }}</button>
           <div style="height:12px"></div>
-          <button class="btn-netflix secondary full-width" (click)="playAsGuestAndProceed()">Play as Guest</button>
+          <button class="btn-netflix secondary full-width" (click)="playAsGuestAndProceed()">{{ t.guest }}</button>
         </div>
       </div>
     </div>
