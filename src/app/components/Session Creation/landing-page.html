@@ -24,35 +24,45 @@
         </div>
       </div>
 
-<div class="header-actions">
-  <select 
-    [ngModel]="language()"
-    (ngModelChange)="language.set($event)"
-    class="language-select"
-  >
-    <option value="en">English</option>
-    <option value="fr">Français</option>
-    <option value="ar">العربية</option>
-  </select>
+      <div class="header-actions">
+        <select 
+          [ngModel]="language()"
+          (ngModelChange)="selectLanguage($event)"
+          class="language-select"
+        >
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="ar">العربية</option>
+        </select>
 
-  <!-- Show login button if not logged in -->
-<button 
-  *ngIf="!isLoggedIn"
-  class="btn-netflix primary"
-  (click)="showLoginModal.set(true)"
->
-  {{ t.login }}
-</button>
+        <!-- Show Sign In and Sign Up buttons if not logged in -->
+        <div *ngIf="!isLoggedIn" class="auth-buttons">
+          <button 
+            class="btn-netflix primary2"
+            (click)="showLoginModal.set(true)"
+          >
+            {{ t.login }}
+          </button>
+          <button 
+            class="btn-netflix primary"
+            (click)="navigateToSignup()"
+          >
+            {{ t.signup }}
+          </button>
+        </div>
 
-  <!-- Show user avatar if logged in -->
-<div *ngIf="isLoggedIn" class="user-avatar" (click)="toggleAccountMenu()" style="position:relative;">
-  <div class="user-initials">{{ userInitials }}</div>
-  <div class="account-menu" *ngIf="showAccountMenu()" style="position:absolute; right:0; top:44px; background:#0b0b0b; padding:8px; border-radius:6px; min-width:140px; box-shadow:0 6px 18px rgba(0,0,0,0.3);">
-    <div style="padding:8px 10px; cursor:pointer;" (click)="logoutAccount()">Log out</div>
-  </div>
-</div>
-</div>
+        <!-- Show user avatar if logged in -->
+        <div *ngIf="isLoggedIn" class="user-avatar-wrapper">
+          <div class="user-avatar" (click)="toggleAccountMenu()">
+            <div class="user-initials">{{ userInitials }}</div>
+          </div>
 
+          <div class="account-dropdown" *ngIf="showAccountMenu()" @fadeInOut>
+            <div class="dropdown-item" (click)="logoutAccount()">Log out</div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <div class="hero-content">
@@ -228,55 +238,84 @@
     </div>
   </div>
 
-<!-- Login Modal -->
-<div class="modal-backdrop" [class.active]="showLoginModal()" (click)="closeLoginModal()">
-  <div class="netflix-modal login-modal" (click)="$event.stopPropagation()" [class.show]="showLoginModal()">
-    <button class="modal-close" (click)="closeLoginModal()">
-      ✕
-    </button>
+  <!-- Login Modal -->
+  <div class="modal-backdrop" [class.active]="showLoginModal()" (click)="closeLoginModal()">
+    <div class="netflix-modal login-modal" (click)="$event.stopPropagation()" [class.show]="showLoginModal()">
+      <button class="modal-close" (click)="closeLoginModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
 
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">{{ t.login }}</h2>
-      </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">{{ t.login }}</h2>
+          <p class="modal-description">Welcome back to GeoQuiz</p>
+        </div>
 
-      <div class="session-actions">
-        <div class="input-group">
-          <label class="input-label">{{ t.email }}</label>
-          <input type="email" [(ngModel)]="email" class="modal-input" placeholder="your@email.com" />
+        <div class="session-actions">
+          <div class="input-group">
+            <label class="input-label">{{ t.email }}</label>
+            <input 
+              type="email" 
+              [(ngModel)]="email" 
+              class="modal-input" 
+              placeholder="your@email.com"
+              (keyup.enter)="onLogin()"
+            />
+          </div>
+          <div class="input-group">
+            <label class="input-label">{{ t.password }}</label>
+            <input 
+              type="password" 
+              [(ngModel)]="password" 
+              class="modal-input" 
+              placeholder="••••••••"
+              (keyup.enter)="onLogin()"
+            />
+          </div>
+          
+          <p class="error-message" *ngIf="loginError">{{ loginError }}</p>
+          
+          <button class="btn-netflix primary full-width" (click)="onLogin()">
+            {{ t.login }}
+          </button>
+
+          <!-- Sign Up Link -->
+          <div class="modal-footer">
+            <p class="signup-prompt">
+              New to GeoQuiz? 
+              <button class="link-button" (click)="navigateToSignup()">Create an account</button>
+            </p>
+          </div>
         </div>
-        <div class="input-group">
-          <label class="input-label">{{ t.password }}</label>
-          <input type="password" [(ngModel)]="password" class="modal-input" placeholder="••••••••" />
-        </div>
-        <button class="btn-netflix primary full-width" (click)="onLogin()">
-          {{ t.login }}
-        </button>
-        <p class="error-message" *ngIf="loginError">{{ loginError }}</p>
       </div>
     </div>
   </div>
-</div>
 
-</div>
+  <!-- Auth Choice Modal (Sign in or Play as Guest) -->
+  <div class="modal-backdrop" [class.active]="showAuthChoiceModal()" (click)="showAuthChoiceModal.set(false)">
+    <div class="netflix-modal auth-choice-modal" (click)="$event.stopPropagation()" [class.show]="showAuthChoiceModal()">
+      <button class="modal-close" (click)="showAuthChoiceModal.set(false)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
 
-<!-- Auth Choice Modal (Sign in or Play as Guest) -->
-<div class="modal-backdrop" [class.active]="showAuthChoiceModal()" (click)="showAuthChoiceModal.set(false)">
-  <div class="netflix-modal auth-choice-modal" (click)="$event.stopPropagation()" [class.show]="showAuthChoiceModal()">
-    <button class="modal-close" (click)="showAuthChoiceModal.set(false)">
-      ✕
-    </button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Choose your account</h2>
+        </div>
 
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">{{ t.login }}</h2>
-        <p class="modal-description">Please sign in to keep your progress, or continue as a guest for this session only.</p>
-      </div>
-
-      <div class="session-actions">
-        <button class="btn-netflix primary full-width" (click)="openSignInFromChoice()">{{ t.login }}</button>
-        <div style="height:12px"></div>
-        <button class="btn-netflix secondary full-width" (click)="playAsGuestAndProceed()">Play as Guest</button>
+        <div class="session-actions">
+          <button class="btn-netflix primary full-width" (click)="openSignInFromChoice()">{{ t.login }}</button>
+          <div style="height:12px"></div>
+          <button class="btn-netflix primary full-width" (click)="navigateToSignup()">{{ t.signup }}</button>
+          <div style="height:12px"></div>
+          <button class="btn-netflix secondary full-width" (click)="playAsGuestAndProceed()">Play as Guest</button>
+        </div>
       </div>
     </div>
   </div>

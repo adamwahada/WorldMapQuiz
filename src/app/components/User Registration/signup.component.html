@@ -1,0 +1,120 @@
+<div class="signup-page" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
+  <!-- Background -->
+  <div class="signup-background"></div>
+  <div class="signup-overlay"></div>
+
+  <!-- Header -->
+  <header class="signup-header">
+    <div class="integrated-header">
+      <div class="logo-section">
+        <!-- Premium Logo -->
+        <div class="logo-wrapper">
+          <div class="logo-glow"></div>
+          <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+              <path d="M2 12h20"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-name">GeoQuiz</h1>
+          <p class="brand-subtitle">WORLD EDITION</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Signup Form Container -->
+  <div class="signup-container">
+    <div class="signup-card">
+      <h2 class="signup-title">{{ t.createAccount }}</h2>
+      <p class="signup-subtitle">{{ t.subtitle }}</p>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSignup()" class="signup-form">
+        <div class="input-group">
+          <label class="input-label">{{ t.emailLabel }}</label>
+          <input 
+            type="email" 
+            formControlName="email"
+            class="form-input"
+            [class.error]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+            [placeholder]="t.emailPlaceholder"
+          />
+          <div class="input-error" *ngIf="getError('email')">
+            {{ getError('email') }}
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">{{ t.passwordLabel }}</label>
+          <div class="password-wrapper">
+            <input 
+              [type]="passwordVisible() ? 'text' : 'password'"
+              formControlName="password"
+              class="form-input"
+              [class.error]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
+              [placeholder]="t.passwordPlaceholder"
+            />
+            <button 
+              type="button" 
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              tabindex="-1"
+            >
+              <svg *ngIf="!passwordVisible()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg *ngIf="passwordVisible()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="input-error" *ngIf="getError('password')">
+            {{ getError('password') }}
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          {{ errorMessage() }}
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-signup"
+          [disabled]="loading()"
+        >
+          <span *ngIf="!loading()">{{ t.signupButton }}</span>
+          <span *ngIf="loading()" class="loading-spinner">
+            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="2" x2="12" y2="6"></line>
+              <line x1="12" y1="18" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="6" y2="12"></line>
+              <line x1="18" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+              <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+            </svg>
+            {{ t.creatingAccount }}
+          </span>
+        </button>
+      </form>
+
+      <div class="signup-footer">
+        <p class="signin-prompt">
+          {{ t.alreadyHaveAccount }} 
+          <button class="link-button" (click)="navigateToLogin()">{{ t.loginLink }}</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

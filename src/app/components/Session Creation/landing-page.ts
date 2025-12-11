@@ -1,39 +1,13 @@
-// landing-page.component.ts
-import { Component, signal } from '@angular/core';
+import { Component, signal , TRANSLATIONS } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { GameService } from '../../services/game.service';
 import { User } from 'firebase/auth';
-
-interface Translations {
-  title: string;
-  subtitle: string;
-  cta: string;
-  login: string;
-  players: string;
-  difficulty: string;
-  timer: string;
-  easy: string;
-  medium: string;
-  hard: string;
-  diffNote: string;
-  customize: string;
-  enterMinutes: string;
-  sessionName: string;
-  sessionNamePlaceholder: string;
-  createSession: string;
-  joinSession: string;
-  enterCode: string;
-  codePlaceholder: string;
-  validateAndJoin: string;
-  loginDesc: string;
-  email: string;
-  password: string;
-  or: string;
-}
-
+import { LanguageService } from '../../services/language.service';
+import { translations, Translations } from './translations';
 @Component({
   selector: 'app-landing',
   standalone: true,
@@ -42,10 +16,9 @@ interface Translations {
   styleUrls: ['./landing-page.scss']
 })
 export class LandingPageComponent {
-  // Language and RTL
+  // Language and current user
   language = signal<'en' | 'fr' | 'ar'>('en');
   currentUser = signal<User | null>(null);
-
 
   // Modals
   showSessionModal = signal(false);
@@ -68,97 +41,41 @@ export class LandingPageComponent {
   password = '';
   loginError = '';
 
-  // Translations
-  translations: Record<'en' | 'fr' | 'ar', Translations> = {
-    en: {
-      title: 'Unlimited Geography Quizzes, and Much More',
-      subtitle: 'Play anywhere • Challenge your friends anytime',
-      cta: 'Start Playing',
-      login: 'Sign In',
-      players: 'Players',
-      difficulty: 'Difficulty',
-      timer: 'Timer',
-      easy: 'Easy',
-      medium: 'Medium',
-      hard: 'Hard',
-      diffNote: 'Easy: pick freely • Medium: alternates pick/random • Hard: dice only',
-      customize: 'Custom',
-      enterMinutes: 'Enter minutes...',
-      sessionName: 'Session Name',
-      sessionNamePlaceholder: 'Enter your name...',
-      createSession: 'Create Session',
-      joinSession: 'Join Session',
-      enterCode: 'Enter Session Code',
-      codePlaceholder: 'Enter code...',
-      validateAndJoin: 'Validate & Join',
-      loginDesc: 'Sign in to save your progress',
-      email: 'Email',
-      password: 'Password',
-      or: 'or'
-    },
-    fr: {
-      title: 'Quiz de Géographie Illimités, et Bien Plus',
-      subtitle: 'Jouez partout • Défiez vos amis à tout moment',
-      cta: 'Commencer à Jouer',
-      login: "S'identifier",
-      players: 'Joueurs',
-      difficulty: 'Difficulté',
-      timer: 'Minuteur',
-      easy: 'Facile',
-      medium: 'Moyen',
-      hard: 'Difficile',
-      diffNote: 'Facile: choix libre • Moyen: alterne choix/aléatoire • Difficile: dés uniquement',
-      customize: 'Personnaliser',
-      enterMinutes: 'Entrez les minutes...',
-      sessionName: 'Nom de Session',
-      sessionNamePlaceholder: 'Entrez votre nom...',
-      createSession: 'Créer Session',
-      joinSession: 'Rejoindre Session',
-      enterCode: 'Entrer le Code',
-      codePlaceholder: 'Entrez le code...',
-      validateAndJoin: 'Valider et Rejoindre',
-      loginDesc: 'Connectez-vous pour sauvegarder votre progression',
-      email: 'Email',
-      password: 'Mot de passe',
-      or: 'ou'
-    },
-    ar: {
-      title: 'اختبارات جغرافيا غير محدودة، وأكثر من ذلك',
-      subtitle: 'العب في أي مكان • تحدى أصدقائك في أي وقت',
-      cta: 'ابدأ اللعب',
-      login: 'تسجيل الدخول',
-      players: 'اللاعبون',
-      difficulty: 'الصعوبة',
-      timer: 'المؤقت',
-      easy: 'سهل',
-      medium: 'متوسط',
-      hard: 'صعب',
-      diffNote: 'سهل: اختر بحرية • متوسط: يتناوب بين الاختيار/العشوائي • صعب: النرد فقط',
-      customize: 'تخصيص',
-      enterMinutes: 'أدخل الدقائق...',
-      sessionName: 'اسم الجلسة',
-      sessionNamePlaceholder: 'أدخل اسمك...',
-      createSession: 'إنشاء جلسة',
-      joinSession: 'الانضمام إلى الجلسة',
-      enterCode: 'أدخل رمز الجلسة',
-      codePlaceholder: 'أدخل الرمز...',
-      validateAndJoin: 'التحقق والانضمام',
-      loginDesc: 'سجل الدخول لحفظ تقدمك',
-      email: 'البريد الإلكتروني',
-      password: 'كلمة المرور',
-      or: 'أو'
-    }
-  };
+  // Track an intended action when user must choose auth vs guest
+  pendingAction: 'create' | 'join' | null = null;
 
   constructor(
     private router: Router,
     private auth: AuthService,
-    private games: GameService
-  ) {    this.auth.currentUser$.subscribe(user => {
-      this.currentUser.set(user);
-    });}
+    private games: GameService,
+    private languageService: LanguageService
+  ) {
+    // Initialize language from service
+    this.language.set(this.languageService.getLanguage());
 
+    // Listen to auth changes
+    this.auth.currentUser$.subscribe(user => this.currentUser.set(user));
+  }
+
+  // ---------------------
+  // Language
+  // ---------------------
+  selectLanguage(lang: 'en' | 'fr' | 'ar') {
+    this.language.set(lang);
+    this.languageService.setLanguage(lang);
+  }
+
+get t(): Translations {
+  return translations[this.language()]; // ✅ use lowercase
+}
+
+  get isRTL(): boolean {
+    return this.language() === 'ar';
+  }
+
+  // ---------------------
   // Account helpers
+  // ---------------------
   toggleAccountMenu(): void {
     this.showAccountMenu.set(!this.showAccountMenu());
   }
@@ -171,7 +88,6 @@ export class LandingPageComponent {
     this.showAccountMenu.set(false);
     try {
       if (this.isGuest) {
-        // Delete anonymous guest account
         await this.auth.deleteAnonymousIfGuest();
       } else {
         await this.auth.logout();
@@ -181,19 +97,27 @@ export class LandingPageComponent {
     }
   }
 
-  // Track an intended action when user must choose auth vs guest
-  pendingAction: 'create' | 'join' | null = null;
-
-  // Convenience getters
-  get t() {
-    return this.translations[this.language()];
+  get isLoggedIn(): boolean {
+    return !!this.currentUser();
   }
 
-  get isRTL() {
-    return this.language() === 'ar';
+  get userInitials(): string {
+    if (!this.currentUser()?.email) return '';
+    const email = this.currentUser()!.email!;
+    const parts = email.split('@')[0].split(/[.\-_]/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   }
 
+  navigateToSignup() {
+    this.showLoginModal.set(false);
+    this.showAuthChoiceModal.set(false);
+    this.router.navigate(['/signup']);
+  }
+
+  // ---------------------
   // Timer
+  // ---------------------
   setTimer(min: number) {
     this.minutes = min;
     this.customTimer.set(false);
@@ -204,7 +128,9 @@ export class LandingPageComponent {
     if (this.customTimer()) this.minutes = 15;
   }
 
-  // Close modals
+  // ---------------------
+  // Modals
+  // ---------------------
   closeSessionModal() {
     this.showSessionModal.set(false);
     this.errorMsg = '';
@@ -218,7 +144,9 @@ export class LandingPageComponent {
     this.loginError = '';
   }
 
-  // Persist local game settings
+  // ---------------------
+  // Persist settings
+  // ---------------------
   private persistSettings(): void {
     const settings = {
       players: this.players,
@@ -230,7 +158,9 @@ export class LandingPageComponent {
     } catch {}
   }
 
+  // ---------------------
   // Session creation
+  // ---------------------
   async createSession(): Promise<void> {
     this.errorMsg = '';
     this.persistSettings();
@@ -257,7 +187,6 @@ export class LandingPageComponent {
     }
   }
 
-  // Called when user clicks create, ensures auth choice if necessary
   attemptCreate(): void {
     if (this.isLoggedIn) {
       void this.createSession();
@@ -267,7 +196,9 @@ export class LandingPageComponent {
     this.showAuthChoiceModal.set(true);
   }
 
-  // Join existing session
+  // ---------------------
+  // Join session
+  // ---------------------
   async joinSession(): Promise<void> {
     this.errorMsg = '';
     this.persistSettings();
@@ -279,7 +210,7 @@ export class LandingPageComponent {
     }
 
     if (!this.playerName.trim()) {
-      this.errorMsg = 'Please enter your name';
+      this.errorMsg = 'Please enter session name';
       return;
     }
 
@@ -295,7 +226,6 @@ export class LandingPageComponent {
     }
   }
 
-  // Called when user clicks join, ensures auth choice if necessary
   attemptJoin(): void {
     if (this.isLoggedIn) {
       void this.joinSession();
@@ -305,13 +235,15 @@ export class LandingPageComponent {
     this.showAuthChoiceModal.set(true);
   }
 
-  // Play as guest (explicit): sign in anonymously and mark session-only guest
+  // ---------------------
+  // Guest login
+  // ---------------------
   async playAsGuestAndProceed(): Promise<void> {
     try {
       await this.auth.loginAnonymously();
-      // Mark as guest for session lifetime only
       try { sessionStorage.setItem('guest', '1'); } catch {}
       this.showAuthChoiceModal.set(false);
+
       if (this.pendingAction === 'create') {
         await this.createSession();
       } else if (this.pendingAction === 'join') {
@@ -326,13 +258,14 @@ export class LandingPageComponent {
     }
   }
 
-  // Open regular sign-in modal from auth choice
+  // ---------------------
+  // Login
+  // ---------------------
   openSignInFromChoice(): void {
     this.showAuthChoiceModal.set(false);
     this.showLoginModal.set(true);
   }
 
-  // Login modal
   async onLogin(): Promise<void> {
     this.loginError = '';
 
@@ -344,20 +277,9 @@ export class LandingPageComponent {
     try {
       await this.auth.login(this.email.trim(), this.password.trim());
       this.closeLoginModal();
-      this.router.navigate(['/']); 
+      this.router.navigate(['/']);
     } catch (err: any) {
       this.loginError = err.message || 'Login failed';
     }
-  }
-  get userInitials() {
-    if (!this.currentUser()?.email) return '';
-    const email = this.currentUser()!.email!;
-    const parts = email.split('@')[0].split(/[.\-_]/); // split by dot, dash, underscore
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-
-  get isLoggedIn() {
-    return !!this.currentUser();
   }
 }

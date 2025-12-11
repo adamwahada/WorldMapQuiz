@@ -265,7 +265,16 @@
     border-color: #e50914;
     
     &:hover {
-      background: #e50914;
+      background: #f9010e;
+    }
+  }
+    
+  .btn-netflix.primary2 {
+    background: rgba(210, 204, 204, 0.9);
+    border-color: #3a0205;
+    
+    &:hover {
+      background: #ffffff;
     }
   }
 }
@@ -357,6 +366,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
+   margin: 0 0.25rem;
 
   &.primary {
     background: #e50914;
@@ -825,16 +835,65 @@
   }
 }
 
+.user-avatar-wrapper {
+  position: relative;
+}
+
 .user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #f093fb, #f5576c, #4facfe);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;   
+  background: #e50914;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.user-initials {
   color: white;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: #141414;
+  border-radius: 6px;
+  min-width: 160px;
+  padding: 8px 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  border: 1px solid #2c2c2c;
+  animation: fadeIn 0.15s ease-out;
+  z-index: 999;
+}
+
+.dropdown-item {
+  padding: 10px 14px;
+  color: #e5e5e5;
   font-size: 14px;
   cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #333;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

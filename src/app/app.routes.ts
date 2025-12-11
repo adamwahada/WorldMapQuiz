@@ -5,7 +5,10 @@ import { SignupComponent } from './components/User Registration/signup.component
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
-  { path: 'login', component: SignupComponent },
+    {
+    path: 'signup',
+    component: SignupComponent
+  },
   { path: 'game', component: QuizComponent },
   { path: '**', redirectTo: '' }
 ];
