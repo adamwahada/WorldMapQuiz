@@ -1,24 +1,38 @@
 import { Component, signal } from '@angular/core';
-
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { GameService, GameSession, Player, GameSettings } from '../../services/game.service';
+import { GameService, GameSettings } from '../../services/game.service';
 import { User } from 'firebase/auth';
 import { LanguageService } from '../../services/language.service';
 import { translations, Translations } from './translations';
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService, ToastPackage } from 'ngx-toastr';
+import { ActiveSessionToastComponent } from './active-session-toast';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, ],
   templateUrl: './landing-page.html',
   styleUrls: ['./landing-page.scss']
 })
 export class LandingPageComponent {
 
   // ---------------------
+  showActiveSessionModal = signal(false);
+
+  // Toast actions for active session
+  joinActiveSession() {
+    const gameId = localStorage.getItem('gameId');
+    if (gameId) this.router.navigate(['/waiting-room', gameId]);
+  }
+
+  quitActiveSession() {
+    localStorage.removeItem('gameId');
+    localStorage.removeItem('gameCode');
+    this.showSessionModal.set(true);
+  }
   // Signals / state
   // ---------------------
   language = signal<'en' | 'fr' | 'ar'>('en');
@@ -40,6 +54,7 @@ export class LandingPageComponent {
   minutes = 15;
   playerName = '';
   joinGameCode = '';
+  // Removed old active session modal state
 
   // ---------------------
   // Login inputs
@@ -59,8 +74,6 @@ export class LandingPageComponent {
     private toastr: ToastrService
   ) {
     this.language.set(this.languageService.getLanguage());
-
-    // Subscribe to auth changes
     this.auth.currentUser$.subscribe(user => this.currentUser.set(user));
   }
 
@@ -163,6 +176,33 @@ async createSession(): Promise<void> {
     return;
   }
 
+  const joinedGameId = localStorage.getItem('gameId');
+  if (joinedGameId) {
+    // Use custom ActiveSessionToastComponent
+    const toastRef = this.toastr.show('', 'Active Session', {
+      toastComponent: ActiveSessionToastComponent,
+      closeButton: true,
+      disableTimeOut: true,
+      tapToDismiss: false,
+      onActivateTick: true
+    });
+
+    // Pass the active session code to the toast component
+    toastRef.toastRef.componentInstance.sessionCode = localStorage.getItem('gameCode') || '';
+
+    // Subscribe to the toast component's outputs
+    toastRef.toastRef.componentInstance.join.subscribe(() => this.joinActiveSession());
+    toastRef.toastRef.componentInstance.quit.subscribe(() => this.quitActiveSession());
+    toastRef.toastRef.componentInstance.close.subscribe(() => toastRef.toastRef.close());
+    toastRef.toastRef.componentInstance.showModal.subscribe(() => {
+      toastRef.toastRef.close();
+      this.showActiveSessionModal.set(true);
+    });
+
+    this.loading.set(false);
+    return;
+  }
+
   try {
     const settings: GameSettings = {
       players: this.players,
@@ -171,30 +211,11 @@ async createSession(): Promise<void> {
     };
     const maxPlayers = this.players;
 
-    // Check if user already joined a session
-    const joinedGameId = localStorage.getItem('gameId');
-    if (joinedGameId) {
-      this.toastr.error('You have already joined a session!', 'Error');
-      this.loading.set(false);
-      return;
-    }
-
-    // Debug: log current user and params
-    console.log('Attempting to create game:', {
-      playerName: this.playerName.trim(),
-      settings,
-      maxPlayers,
-      currentUser: this.auth.currentUser$ ? this.auth.currentUser$ : null
-    });
-
     const { gameId, code } = await this.games.createGame(this.playerName.trim(), settings, maxPlayers);
-
     localStorage.setItem('gameId', gameId);
     localStorage.setItem('gameCode', code);
-
     this.router.navigate(['/waiting-room', gameId]);
   } catch (e: any) {
-    // Debug: log error to console
     console.error('Create session error:', e);
     this.toastr.error(e.message || 'Could not create session');
   } finally {
@@ -204,8 +225,6 @@ async createSession(): Promise<void> {
 
 
   attemptCreate(): void {
-    // Always log when the button is clicked
-    console.log('Create Session button clicked');
     if (this.isLoggedIn) {
       void this.createSession();
       return;
@@ -232,7 +251,27 @@ async joinSession(): Promise<void> {
 
   const joinedGameId = localStorage.getItem('gameId');
   if (joinedGameId) {
-    this.toastr.error('You have already joined a session!');
+    // Use custom ActiveSessionToastComponent
+    const toastRef = this.toastr.show('', 'Active Session', {
+      toastComponent: ActiveSessionToastComponent,
+      closeButton: true,
+      disableTimeOut: true,
+      tapToDismiss: false,
+      onActivateTick: true
+    });
+
+    // Pass the active session code to the toast component
+    toastRef.toastRef.componentInstance.sessionCode = localStorage.getItem('gameCode') || '';
+
+    // Subscribe to the toast component's outputs
+    toastRef.toastRef.componentInstance.join.subscribe(() => this.joinActiveSession());
+    toastRef.toastRef.componentInstance.quit.subscribe(() => this.quitActiveSession());
+    toastRef.toastRef.componentInstance.close.subscribe(() => toastRef.toastRef.close());
+    toastRef.toastRef.componentInstance.showModal.subscribe(() => {
+      toastRef.toastRef.close();
+      this.showActiveSessionModal.set(true);
+    });
+
     return;
   }
 
@@ -241,7 +280,6 @@ async joinSession(): Promise<void> {
     const { gameId } = await this.games.joinGameByCode(this.joinGameCode.trim(), this.playerName.trim());
     localStorage.setItem('gameId', gameId);
     localStorage.setItem('gameCode', this.joinGameCode.trim());
-
     this.router.navigate(['/waiting-room', gameId]);
   } catch (e: any) {
     this.toastr.error(e.message || 'Could not join session', 'Error');
@@ -249,6 +287,7 @@ async joinSession(): Promise<void> {
     this.loading.set(false);
   }
 }
+
 
   attemptJoin(): void {
     if (this.isLoggedIn) {
@@ -290,22 +329,21 @@ async joinSession(): Promise<void> {
     this.showLoginModal.set(true);
   }
 
-async onLogin(): Promise<void> {
-  if (!this.email.trim() || !this.password.trim()) {
-    this.toastr.error('Please enter both email and password', 'Login Error');
-    return;
-  }
+  async onLogin(): Promise<void> {
+    if (!this.email.trim() || !this.password.trim()) {
+      this.toastr.error('Please enter both email and password', 'Login Error');
+      return;
+    }
 
-  try {
-    await this.auth.login(this.email.trim(), this.password.trim());
-    this.closeLoginModal();
-    this.router.navigate(['/']);
-  } catch (err: any) {
-    const message = err.message || 'Login failed';
-    this.toastr.error(message, 'Login Error');
+    try {
+      await this.auth.login(this.email.trim(), this.password.trim());
+      this.closeLoginModal();
+      this.router.navigate(['/']);
+    } catch (err: any) {
+      const message = err.message || 'Login failed';
+      this.toastr.error(message, 'Login Error');
+    }
   }
-}
-
 
   // ---------------------
   // Close modals
@@ -321,4 +359,6 @@ async onLogin(): Promise<void> {
     this.password = '';
     this.loginError = '';
   }
+
+  // Removed old active session modal methods
 }
