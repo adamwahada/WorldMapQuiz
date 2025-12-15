@@ -30,6 +30,11 @@ export interface Translations {
   or: string;
   emailPlaceholder: string;
   passwordPlaceholder: string;
+  activeSession: string;
+  activeSessionMessage: string;
+  sessionCode: string;
+  resume: string;
+  quit: string;
 }
 
 export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
@@ -64,7 +69,12 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     password: 'Password',
     or: 'or',
     emailPlaceholder: 'your@email.com',
-    passwordPlaceholder: '••••••••'
+    passwordPlaceholder: '••••••••',
+    activeSession: 'Active Session',
+    activeSessionMessage: 'You have an active session',
+    sessionCode: 'Session Code',
+    resume: 'Resume Session',
+    quit: 'Quit Session'
   },
   fr: {
     title: 'Quiz de Géographie Illimités, et Bien Plus',
@@ -97,7 +107,12 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     password: 'Mot de passe',
     or: 'ou',
     emailPlaceholder: 'votre@email.com',
-    passwordPlaceholder: '••••••••'
+    passwordPlaceholder: '••••••••',
+    activeSession: 'Session Active',
+    activeSessionMessage: 'Vous avez une session active',
+    sessionCode: 'Code de Session',
+    resume: 'Reprendre la Session',
+    quit: 'Quitter la Session'
   },
   ar: {
     title: 'اختبارات جغرافيا غير محدودة، وأكثر من ذلك',
@@ -130,6 +145,11 @@ export const translations: Record<'en' | 'fr' | 'ar', Translations> = {
     password: 'كلمة المرور',
     or: 'أو',
     emailPlaceholder: 'اسم@مثال.com',
-    passwordPlaceholder: '••••••••'
+    passwordPlaceholder: '••••••••',
+    activeSession: 'جلسة نشطة',
+    activeSessionMessage: 'لديك جلسة نشطة',
+    sessionCode: 'رمز الجلسة',
+    resume: 'استئناف الجلسة',
+    quit: 'إنهاء الجلسة'
   }
 };

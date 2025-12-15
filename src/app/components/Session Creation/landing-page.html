@@ -51,8 +51,18 @@
     <div class="hero-content">
       <h2 class="hero-title">{{ t.title }}</h2>
       <p class="hero-subtitle">{{ t.subtitle }}</p>
-      <button class="btn-netflix primary hero-cta" (click)="showSessionModal.set(true)">
+      
+      <!-- Start Playing Button (when no active session) -->
+      <button *ngIf="!activeSession()" class="btn-netflix primary hero-cta" (click)="showSessionModal.set(true)">
         <span>{{ t.cta }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Resume Session Button (when active session exists) -->
+      <button *ngIf="activeSession()" class="btn-netflix primary hero-cta" (click)="showActiveSessionModal.set(true)">
+        <span>{{ t.resume }}</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
@@ -218,8 +228,39 @@
     </div>
   </div>
 
-  <!-- Removed old Active Session Modal -->
+  <!-- Active Session Modal -->
+  <div class="modal-backdrop" [class.active]="showActiveSessionModal()" (click)="closeActiveSessionModal()">
+    <div class="netflix-modal active-session-modal" (click)="$event.stopPropagation()" [class.show]="showActiveSessionModal()">
+      <button class="modal-close" (click)="closeActiveSessionModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
 
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">{{ t.activeSession }}</h2>
+          <p class="modal-description">{{ t.activeSessionMessage }}</p>
+        </div>
+
+        <div class="session-actions">
+          <button class="btn-netflix primary full-width" (click)="joinActiveSession()">
+            <span>{{ t.resume }}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          <button class="btn-netflix secondary full-width" (click)="quitActiveSessionModal()">
+            <span>{{ t.quit }}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Auth Choice Modal -->
   <div class="modal-backdrop" [class.active]="showAuthChoiceModal()" (click)="showAuthChoiceModal.set(false)">

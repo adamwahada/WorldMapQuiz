@@ -1,40 +1,42 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { User } from 'firebase/auth';
+import { ToastrService } from 'ngx-toastr';
+
 import { AuthService } from '../../services/auth.service';
 import { GameService, GameSettings } from '../../services/game.service';
-import { User } from 'firebase/auth';
 import { LanguageService } from '../../services/language.service';
 import { translations, Translations } from './translations';
-import { ToastrService, ToastPackage } from 'ngx-toastr';
-import { ActiveSessionToastComponent } from './active-session-toast';
-import { CommonModule } from '@angular/common';
+
+interface StoredSession {
+  gameId: string;
+  gameCode: string;
+  expiresAt: number;
+}
+
+interface UserStatus {
+  isInSession: boolean;
+  sessionId?: string;
+  updatedAt: number;
+}
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [FormsModule, CommonModule, ],
+  imports: [FormsModule, CommonModule],
   templateUrl: './landing-page.html',
-  styleUrls: ['./landing-page.scss']
+  styleUrls: ['./landing-page.scss'],
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit {
 
   // ---------------------
-  showActiveSessionModal = signal(false);
-
-  // Toast actions for active session
-  joinActiveSession() {
-    const gameId = localStorage.getItem('gameId');
-    if (gameId) this.router.navigate(['/waiting-room', gameId]);
-  }
-
-  quitActiveSession() {
-    localStorage.removeItem('gameId');
-    localStorage.removeItem('gameCode');
-    this.showSessionModal.set(true);
-  }
   // Signals / state
   // ---------------------
+  showActiveSessionModal = signal(false);
+  activeSession = signal<StoredSession | null>(null);
+
   language = signal<'en' | 'fr' | 'ar'>('en');
   currentUser = signal<User | null>(null);
 
@@ -42,6 +44,7 @@ export class LandingPageComponent {
   showLoginModal = signal(false);
   showAuthChoiceModal = signal(false);
   showAccountMenu = signal(false);
+
   sessionMode = signal<'create' | 'join'>('create');
   customTimer = signal(false);
   loading = signal(false);
@@ -54,7 +57,6 @@ export class LandingPageComponent {
   minutes = 15;
   playerName = '';
   joinGameCode = '';
-  // Removed old active session modal state
 
   // ---------------------
   // Login inputs
@@ -63,8 +65,10 @@ export class LandingPageComponent {
   password = '';
   loginError = '';
 
-  // Track intended action for guest login
   pendingAction: 'create' | 'join' | null = null;
+
+  private readonly SESSION_KEY = 'activeSession';
+  private readonly USER_STATUS_KEY = 'userStatus';
 
   constructor(
     public router: Router,
@@ -74,7 +78,138 @@ export class LandingPageComponent {
     private toastr: ToastrService
   ) {
     this.language.set(this.languageService.getLanguage());
-    this.auth.currentUser$.subscribe(user => this.currentUser.set(user));
+    
+    // Wait for auth to initialize before subscribing
+    this.auth.authInitialized$.subscribe(initialized => {
+      if (initialized) {
+        this.auth.currentUser$.subscribe(user => {
+          this.currentUser.set(user);
+          this.checkActiveSession();
+        });
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    // Check for active session on component init
+    this.checkActiveSession();
+  }
+
+  private checkActiveSession(): void {
+    if (typeof localStorage === 'undefined') return;
+    
+    const userStatus = this.getUserStatus();
+    
+    // If user is marked as in session, check if session still exists
+    if (userStatus?.isInSession) {
+      const session = this.getSession();
+      if (session) {
+        this.activeSession.set(session);
+      } else {
+        // Session expired but user status still says they're in session, clear it
+        this.clearUserStatus();
+        this.activeSession.set(null);
+      }
+    } else {
+      // User is not in session according to status
+      this.activeSession.set(null);
+    }
+  }
+
+  // ---------------------
+  // Session helpers (NEW)
+  // ---------------------
+  private getSession(): StoredSession | null {
+    if (typeof localStorage === 'undefined') return null;
+    
+    const raw = localStorage.getItem(this.SESSION_KEY);
+    if (!raw) return null;
+
+    try {
+      const session = JSON.parse(raw) as StoredSession;
+      if (Date.now() > session.expiresAt) {
+        localStorage.removeItem(this.SESSION_KEY);
+        return null;
+      }
+      return session;
+    } catch {
+      localStorage.removeItem(this.SESSION_KEY);
+      return null;
+    }
+  }
+
+  private setSession(gameId: string, gameCode: string): void {
+    if (typeof localStorage === 'undefined') return;
+    
+    const session: StoredSession = {
+      gameId,
+      gameCode,
+      expiresAt: Date.now() + this.minutes * 60_000,
+    };
+    localStorage.setItem(this.SESSION_KEY, JSON.stringify(session));
+  }
+
+  private clearSession(): void {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.removeItem(this.SESSION_KEY);
+  }
+
+  private setUserStatus(isInSession: boolean, sessionId?: string): void {
+    if (typeof localStorage === 'undefined') return;
+    
+    const status: UserStatus = {
+      isInSession,
+      sessionId,
+      updatedAt: Date.now(),
+    };
+    localStorage.setItem(this.USER_STATUS_KEY, JSON.stringify(status));
+  }
+
+  private getUserStatus(): UserStatus | null {
+    if (typeof localStorage === 'undefined') return null;
+    
+    const raw = localStorage.getItem(this.USER_STATUS_KEY);
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw) as UserStatus;
+    } catch {
+      localStorage.removeItem(this.USER_STATUS_KEY);
+      return null;
+    }
+  }
+
+  private clearUserStatus(): void {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.removeItem(this.USER_STATUS_KEY);
+  }
+
+  // ---------------------
+  // Active Session Modal
+  // ---------------------
+  joinActiveSession(): void {
+    const session = this.getSession();
+    if (!session) {
+      this.toastr.info('Your session has expired');
+      this.clearUserStatus();
+      this.activeSession.set(null);
+      return;
+    }
+    this.showActiveSessionModal.set(false);
+    this.setUserStatus(true, session.gameId);
+    this.router.navigate(['/waiting-room', session.gameId]);
+  }
+
+  quitActiveSessionModal(): void {
+    this.clearSession();
+    this.clearUserStatus();
+    this.activeSession.set(null);
+    this.showActiveSessionModal.set(false);
+    this.showSessionModal.set(true);
+  }
+
+  closeActiveSessionModal(): void {
+    this.showActiveSessionModal.set(false);
   }
 
   // ---------------------
@@ -101,7 +236,11 @@ export class LandingPageComponent {
   }
 
   get isGuest(): boolean {
-    try { return sessionStorage.getItem('guest') === '1'; } catch { return false; }
+    try {
+      return sessionStorage.getItem('guest') === '1';
+    } catch {
+      return false;
+    }
   }
 
   async logoutAccount(): Promise<void> {
@@ -112,6 +251,10 @@ export class LandingPageComponent {
       } else {
         await this.auth.logout();
       }
+      // Clear both session and user status on logout
+      this.clearSession();
+      this.clearUserStatus();
+      this.activeSession.set(null);
       localStorage.clear();
       sessionStorage.clear();
     } catch (e) {
@@ -121,19 +264,6 @@ export class LandingPageComponent {
 
   get isLoggedIn(): boolean {
     return !!this.currentUser();
-  }
-
-  get userInitials(): string {
-    const email = this.currentUser()?.email || '';
-    const parts = email.split('@')[0].split(/[.\-_]/);
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-
-  navigateToSignup() {
-    this.showLoginModal.set(false);
-    this.showAuthChoiceModal.set(false);
-    this.router.navigate(['/signup']);
   }
 
   // ---------------------
@@ -153,82 +283,77 @@ export class LandingPageComponent {
   // Persist settings
   // ---------------------
   private persistSettings(): void {
+    if (typeof localStorage === 'undefined') return;
+    
     const settings: GameSettings = {
       players: this.players,
       difficulty: this.difficulty,
-      minutes: Math.max(1, Math.floor(this.minutes))
+      minutes: Math.max(1, Math.floor(this.minutes)),
     };
-    try {
-      localStorage.setItem('gameSettings', JSON.stringify(settings));
-    } catch {}
+    localStorage.setItem('gameSettings', JSON.stringify(settings));
   }
 
   // ---------------------
   // Create session
   // ---------------------
-async createSession(): Promise<void> {
-  this.loading.set(true);
-  this.persistSettings();
+  async createSession(): Promise<void> {
+    console.log('createSession called');
+    this.loading.set(true);
+    this.persistSettings();
 
-  if (!this.playerName.trim()) {
-    this.toastr.error('Please enter a session name', 'Error');
-    this.loading.set(false);
-    return;
+    if (!this.playerName.trim()) {
+      console.log('Player name is empty');
+      this.toastr.error('Please enter a session name', 'Error');
+      this.loading.set(false);
+      return;
+    }
+
+    const userStatus = this.getUserStatus();
+    if (userStatus?.isInSession) {
+      console.log('User is already in a session');
+      this.closeSessionModal();
+      const session = this.getSession();
+      if (session) {
+        this.activeSession.set(session);
+        this.showActiveSessionModal.set(true);
+      }
+      this.loading.set(false);
+      return;
+    }
+
+    try {
+      const settings: GameSettings = {
+        players: this.players,
+        difficulty: this.difficulty,
+        minutes: Math.max(1, Math.floor(this.minutes)),
+      };
+
+      console.log('Creating game with settings:', settings);
+      const { gameId, code } = await this.games.createGame(
+        this.playerName.trim(),
+        settings,
+        this.players
+      );
+
+      console.log('Game created:', gameId, code);
+      this.setSession(gameId, code);
+      this.setUserStatus(true, gameId);
+      this.router.navigate(['/waiting-room', gameId]);
+    } catch (e: any) {
+      console.error('Error creating session:', e);
+      this.toastr.error(e.message || 'Could not create session');
+    } finally {
+      this.loading.set(false);
+    }
   }
-
-  const joinedGameId = localStorage.getItem('gameId');
-  if (joinedGameId) {
-    // Use custom ActiveSessionToastComponent
-    const toastRef = this.toastr.show('', 'Active Session', {
-      toastComponent: ActiveSessionToastComponent,
-      closeButton: true,
-      disableTimeOut: true,
-      tapToDismiss: false,
-      onActivateTick: true
-    });
-
-    // Pass the active session code to the toast component
-    toastRef.toastRef.componentInstance.sessionCode = localStorage.getItem('gameCode') || '';
-
-    // Subscribe to the toast component's outputs
-    toastRef.toastRef.componentInstance.join.subscribe(() => this.joinActiveSession());
-    toastRef.toastRef.componentInstance.quit.subscribe(() => this.quitActiveSession());
-    toastRef.toastRef.componentInstance.close.subscribe(() => toastRef.toastRef.close());
-    toastRef.toastRef.componentInstance.showModal.subscribe(() => {
-      toastRef.toastRef.close();
-      this.showActiveSessionModal.set(true);
-    });
-
-    this.loading.set(false);
-    return;
-  }
-
-  try {
-    const settings: GameSettings = {
-      players: this.players,
-      difficulty: this.difficulty,
-      minutes: Math.max(1, Math.floor(this.minutes))
-    };
-    const maxPlayers = this.players;
-
-    const { gameId, code } = await this.games.createGame(this.playerName.trim(), settings, maxPlayers);
-    localStorage.setItem('gameId', gameId);
-    localStorage.setItem('gameCode', code);
-    this.router.navigate(['/waiting-room', gameId]);
-  } catch (e: any) {
-    console.error('Create session error:', e);
-    this.toastr.error(e.message || 'Could not create session');
-  } finally {
-    this.loading.set(false);
-  }
-}
-
 
   attemptCreate(): void {
+    console.log('attemptCreate called, isLoggedIn:', this.isLoggedIn);
     if (this.isLoggedIn) {
       void this.createSession();
       return;
     }
+    console.log('User not logged in, showing auth choice modal');
     this.pendingAction = 'create';
     this.showAuthChoiceModal.set(true);
   }
@@ -236,64 +361,61 @@ async createSession(): Promise<void> {
   // ---------------------
   // Join session
   // ---------------------
-async joinSession(): Promise<void> {
-  this.persistSettings();
+  async joinSession(): Promise<void> {
+    console.log('joinSession called');
+    this.persistSettings();
 
-  if (!this.joinGameCode.trim()) {
-    this.toastr.error('Enter a valid join code');
-    return;
+    if (!this.joinGameCode.trim()) {
+      console.log('Join code is empty');
+      this.toastr.error('Enter a valid join code');
+      return;
+    }
+
+    if (!this.playerName.trim()) {
+      console.log('Player name is empty');
+      this.toastr.error('Please enter session name');
+      return;
+    }
+
+    const userStatus = this.getUserStatus();
+    if (userStatus?.isInSession) {
+      console.log('User is already in a session');
+      this.closeSessionModal();
+      const session = this.getSession();
+      if (session) {
+        this.activeSession.set(session);
+        this.showActiveSessionModal.set(true);
+      }
+      return;
+    }
+
+    this.loading.set(true);
+    try {
+      console.log('Joining game with code:', this.joinGameCode.trim());
+      const { gameId } = await this.games.joinGameByCode(
+        this.joinGameCode.trim(),
+        this.playerName.trim()
+      );
+
+      console.log('Game joined:', gameId);
+      this.setSession(gameId, this.joinGameCode.trim());
+      this.setUserStatus(true, gameId);
+      this.router.navigate(['/waiting-room', gameId]);
+    } catch (e: any) {
+      console.error('Error joining session:', e);
+      this.toastr.error(e.message || 'Could not join session', 'Error');
+    } finally {
+      this.loading.set(false);
+    }
   }
-
-  if (!this.playerName.trim()) {
-    this.toastr.error('Please enter session name');
-    return;
-  }
-
-  const joinedGameId = localStorage.getItem('gameId');
-  if (joinedGameId) {
-    // Use custom ActiveSessionToastComponent
-    const toastRef = this.toastr.show('', 'Active Session', {
-      toastComponent: ActiveSessionToastComponent,
-      closeButton: true,
-      disableTimeOut: true,
-      tapToDismiss: false,
-      onActivateTick: true
-    });
-
-    // Pass the active session code to the toast component
-    toastRef.toastRef.componentInstance.sessionCode = localStorage.getItem('gameCode') || '';
-
-    // Subscribe to the toast component's outputs
-    toastRef.toastRef.componentInstance.join.subscribe(() => this.joinActiveSession());
-    toastRef.toastRef.componentInstance.quit.subscribe(() => this.quitActiveSession());
-    toastRef.toastRef.componentInstance.close.subscribe(() => toastRef.toastRef.close());
-    toastRef.toastRef.componentInstance.showModal.subscribe(() => {
-      toastRef.toastRef.close();
-      this.showActiveSessionModal.set(true);
-    });
-
-    return;
-  }
-
-  this.loading.set(true);
-  try {
-    const { gameId } = await this.games.joinGameByCode(this.joinGameCode.trim(), this.playerName.trim());
-    localStorage.setItem('gameId', gameId);
-    localStorage.setItem('gameCode', this.joinGameCode.trim());
-    this.router.navigate(['/waiting-room', gameId]);
-  } catch (e: any) {
-    this.toastr.error(e.message || 'Could not join session', 'Error');
-  } finally {
-    this.loading.set(false);
-  }
-}
-
 
   attemptJoin(): void {
+    console.log('attemptJoin called, isLoggedIn:', this.isLoggedIn);
     if (this.isLoggedIn) {
       void this.joinSession();
       return;
     }
+    console.log('User not logged in, showing auth choice modal');
     this.pendingAction = 'join';
     this.showAuthChoiceModal.set(true);
   }
@@ -312,8 +434,7 @@ async joinSession(): Promise<void> {
       } else if (this.pendingAction === 'join') {
         await this.joinSession();
       }
-    } catch (e) {
-      console.error('Guest login failed', e);
+    } catch {
       this.loginError = 'Could not start guest session';
       this.showAuthChoiceModal.set(false);
     } finally {
@@ -340,8 +461,7 @@ async joinSession(): Promise<void> {
       this.closeLoginModal();
       this.router.navigate(['/']);
     } catch (err: any) {
-      const message = err.message || 'Login failed';
-      this.toastr.error(message, 'Login Error');
+      this.toastr.error(err.message || 'Login failed', 'Login Error');
     }
   }
 
@@ -360,5 +480,20 @@ async joinSession(): Promise<void> {
     this.loginError = '';
   }
 
-  // Removed old active session modal methods
+  navigateToSignup(): void {
+  this.showLoginModal.set(false);
+  this.showAuthChoiceModal.set(false);
+  this.router.navigate(['/signup']);
+}
+get userInitials(): string {
+  const email = this.currentUser()?.email || '';
+  if (!email) return '?';
+
+  const parts = email.split('@')[0].split(/[.\-_]/);
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
 }

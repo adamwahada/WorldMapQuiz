@@ -23,7 +23,9 @@ export interface GameSettings {
 
 export interface Player {
   name: string;
-  joinedAt: Timestamp; // Use Firestore Timestamp
+  joinedAt: Timestamp;
+  status: 'active' | 'left' | 'idle';
+  leftAt?: Timestamp;
 }
 
 export interface GameSession {
@@ -34,6 +36,7 @@ export interface GameSession {
   settings: GameSettings;
   players: Record<string, Player>;
   startTimestamp?: Timestamp;
+  expiresAt: Timestamp;
 }
 
 @Injectable({
@@ -47,15 +50,6 @@ export class GameService {
     const user = auth.currentUser;
     if (!user) throw new Error('User not authenticated');
 
-    // Check for existing active session
-    const q = query(
-      collection(db, 'games'),
-      where('ownerId', '==', user.uid),
-      where('status', 'in', ['waiting', 'playing'])
-    );
-    const snapshot = await getDocs(q);
-    if (!snapshot.empty) throw new Error('You already have an active session.');
-
     const code = nanoid(8);
     const gameRef = await addDoc(collection(db, 'games'), {
       ownerId: user.uid,
@@ -64,7 +58,11 @@ export class GameService {
       maxPlayers,
       settings,
       players: {
-        [user.uid]: { name: playerName, joinedAt: Timestamp.now() },
+        [user.uid]: { 
+          name: playerName, 
+          joinedAt: Timestamp.now(),
+          status: 'active'
+        },
       },
       startTimestamp: null,
     });
@@ -89,7 +87,11 @@ export class GameService {
 
     // Add player
     await updateDoc(doc(db, 'games', gameDoc.id), {
-      [`players.${user.uid}`]: { name: playerName, joinedAt: Timestamp.now() },
+      [`players.${user.uid}`]: { 
+        name: playerName, 
+        joinedAt: Timestamp.now(),
+        status: 'active'
+      },
     });
 
     // Return gameId + current game data
@@ -125,16 +127,23 @@ export class GameService {
     if (!user) throw new Error('User not authenticated');
 
     const gameRef = doc(db, 'games', gameId);
-    const snap = await getDocs(query(collection(db, 'games'), where('code', '==', gameId)));
-    if (snap.empty) throw new Error('Game not found.');
-    const gameData = snap.docs[0].data() as GameSession;
+    const snap = await getDoc(gameRef);
+    if (!snap.exists()) throw new Error('Game not found.');
+    const gameData = snap.data() as GameSession;
 
     // Only creator can remove others; players can remove themselves
     if (playerId !== user.uid && gameData.ownerId !== user.uid) {
       throw new Error('Only the creator can remove other players.');
     }
 
-    await updateDoc(gameRef, { [`players.${playerId}`]: deleteField() });
+    // Mark player as left instead of deleting
+    await updateDoc(gameRef, { 
+      [`players.${playerId}`]: { 
+        ...gameData.players[playerId],
+        status: 'left',
+        leftAt: Timestamp.now()
+      } 
+    });
   }
 
   /** Delete a game (only creator can) */

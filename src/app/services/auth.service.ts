@@ -17,22 +17,24 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private authInitializedSubject = new BehaviorSubject<boolean>(false);
+  
   currentUser$ = this.currentUserSubject.asObservable();
+  authInitialized$ = this.authInitializedSubject.asObservable();
 
   constructor() {
     if (auth) {
-      // Listen for auth state changes
+      // Listen for auth state changes (respects auto-restoration from localStorage)
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          // If the user is anonymous but not an explicit session guest, sign them out.
-          let isGuestFlag = false;
-          try { isGuestFlag = sessionStorage.getItem('guest') === '1'; } catch {}
           console.log('User signed in:', user.uid);
           this.currentUserSubject.next(user);
         } else {
           console.log('No user signed in');
           this.currentUserSubject.next(null);
         }
+        // Mark auth as initialized after first state check
+        this.authInitializedSubject.next(true);
       });
     }
   }

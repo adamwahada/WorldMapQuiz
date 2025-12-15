@@ -38,7 +38,12 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameId = this.route.snapshot.paramMap.get('id')!;
-    this.auth.currentUser$.subscribe(user => this.currentUser.set(user));
+    // Wait for auth to initialize before accessing currentUser
+    this.auth.authInitialized$.subscribe(initialized => {
+      if (initialized) {
+        this.auth.currentUser$.subscribe(user => this.currentUser.set(user));
+      }
+    });
 
     // Listen for real-time game changes
     this.unsubscribeGame = this.games.listenToGame(this.gameId, game => {
