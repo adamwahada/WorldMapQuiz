@@ -25,6 +25,8 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   countdown = signal<number>(600); // default countdown in seconds
   countdownInterval!: Subscription;
   maxPlayersReached = signal(false);
+  playerName = signal<string>('');
+  sessionCode = signal<string>('');
   Object = Object;
 
   private unsubscribeGame!: () => void;
@@ -38,6 +40,15 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameId = this.route.snapshot.paramMap.get('id')!;
+    
+    // Load player name and session code from localStorage
+    if (typeof localStorage !== 'undefined') {
+      const storedPlayerName = localStorage.getItem('playerName');
+      if (storedPlayerName) {
+        this.playerName.set(storedPlayerName);
+      }
+    }
+    
     // Wait for auth to initialize before accessing currentUser
     this.auth.authInitialized$.subscribe(initialized => {
       if (initialized) {
@@ -51,6 +62,11 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
       const prevPlayers = this.gameData()?.players || {};
       this.gameData.set(game);
+      
+      // Set the session code
+      if (game.code) {
+        this.sessionCode.set(game.code);
+      }
 
       // Notify new players
       const prevCount = Object.keys(prevPlayers).length;
@@ -119,6 +135,18 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     if (user.uid !== game.ownerId) return;
 
     this.games.updateGameStatus(this.gameId, 'playing');
+  }
+
+  copySessionCode(): void {
+    const code = this.sessionCode();
+    if (!code) return;
+    
+    navigator.clipboard.writeText(code).then(() => {
+      // Optional: Show feedback that code was copied
+      console.log('Session code copied:', code);
+    }).catch(err => {
+      console.error('Failed to copy session code:', err);
+    });
   }
 
   leaveRoom(): void {

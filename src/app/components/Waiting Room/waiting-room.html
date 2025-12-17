@@ -15,6 +15,13 @@
         <div class="slots">
           Remaining slots: {{ remainingSlots }}
         </div>
+        <div class="session-code-display">
+          <strong>Session Code:</strong>
+          <span class="code">{{ sessionCode() }}</span>
+          <button class="copy-btn" (click)="copySessionCode()" title="Copy session code">
+            📋
+          </button>
+        </div>
       </div>
     </div>
   </div>

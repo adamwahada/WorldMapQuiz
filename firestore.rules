@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Games collection
+    match /games/{gameId} {
+
+      // Read: allow if authenticated (waiting rooms are public for joining)
+      allow read: if request.auth != null;
+
+      // Create: only authenticated, player count valid, status waiting
+      allow create: if request.auth != null
+                    && request.resource.data.ownerId == request.auth.uid
+                    && request.resource.data.players.keys().hasAll([request.auth.uid])
+                    && request.resource.data.players.size() <= request.resource.data.maxPlayers
+                    && request.resource.data.status == 'waiting';
+
+      // Update: allow if authenticated (app validates joining rules)
+      allow update: if request.auth != null;
+
+      // Delete: only owner can delete
+      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;
+    }
+  }
+}

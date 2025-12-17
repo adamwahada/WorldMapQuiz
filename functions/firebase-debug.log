@@ -1,0 +1,558 @@
+[debug] [2025-12-17T05:13:15.260Z] ----------------------------------------------------------------------
+[debug] [2025-12-17T05:13:15.262Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\adamw\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
+[debug] [2025-12-17T05:13:15.262Z] CLI Version:   15.0.0
+[debug] [2025-12-17T05:13:15.262Z] Platform:      win32
+[debug] [2025-12-17T05:13:15.262Z] Node Version:  v24.11.1
+[debug] [2025-12-17T05:13:15.262Z] Time:          Wed Dec 17 2025 06:13:15 GMT+0100 (heure normale d’Europe centrale)
+[debug] [2025-12-17T05:13:15.263Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-17T05:13:16.171Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-17T05:13:16.172Z] > authorizing via signed-in user (adam.wahada@esprit.tn)
+[debug] [2025-12-17T05:13:16.261Z] java version "21.0.9" 2025-10-21 LTS
+
+[debug] [2025-12-17T05:13:16.262Z] Java(TM) SE Runtime Environment (build 21.0.9+7-LTS-338)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.9+7-LTS-338, mixed mode, sharing)
+
+[debug] [2025-12-17T05:13:16.285Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: auth, functions, firestore, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, extensions"}}
+[debug] [2025-12-17T05:13:16.287Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:13:16.287Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:13:16.288Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet [none]
+[debug] [2025-12-17T05:13:17.863Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet 200
+[debug] [2025-12-17T05:13:17.864Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet {"projectNumber":"404708679350","projectId":"world-quizet","lifecycleState":"ACTIVE","name":"World-QUIZET","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-12-09T01:25:58.757500Z","parent":{"type":"organization","id":"387578357282"}}
+[debug] [2025-12-17T05:13:17.873Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:13:17.873Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:13:17.873Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:13:17.874Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:13:17.874Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-12-17T05:13:17.877Z] Emulator locator file path: C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[debug] [2025-12-17T05:13:17.877Z] [hub] writing locator at C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[debug] [2025-12-17T05:13:17.882Z] [Extensions] Started Extensions emulator, this is a noop.
+[debug] [2025-12-17T05:13:17.886Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:13:17.886Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:13:17.886Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:13:17.886Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, database, hosting, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, database, hosting, pubsub, storage, dataconnect\u001b[22m"}}
+[debug] [2025-12-17T05:13:17.897Z] defaultcredentials: writing to file C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json
+[debug] [2025-12-17T05:13:17.898Z] Setting GAC to C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\adamw\\AppData\\Roaming\\firebase\\adam_wahada_esprit.tn_application_default_credentials.json"}}
+[debug] [2025-12-17T05:13:17.898Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:13:17.899Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:13:17.899Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig [none]
+[debug] [2025-12-17T05:13:18.301Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig 200
+[debug] [2025-12-17T05:13:18.301Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig {"projectId":"world-quizet","storageBucket":"world-quizet.firebasestorage.app"}
+[debug] [2025-12-17T05:13:18.317Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-12-17T05:13:18.317Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2025-12-17T05:13:18.317Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\adamw\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.20.2.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--project_id","world-quizet","--rules","C:\\Users\\adamw\\OneDrive\\Bureau\\Quizet\\world-quiz\\firestore.rules","--single_project_mode",true,"--functions_emulator","127.0.0.1:5001"],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false,"shell":false,"port":8080} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\adamw\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.20.2.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"world-quizet\",\"--rules\",\"C:\\\\Users\\\\adamw\\\\OneDrive\\\\Bureau\\\\Quizet\\\\world-quiz\\\\firestore.rules\",\"--single_project_mode\",true,\"--functions_emulator\",\"127.0.0.1:5001\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false,\"shell\":false,\"port\":8080}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[info] +  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2025-12-17T05:13:25.514Z] [Extensions] Connecting Extensions emulator, this is a noop.
+[info] i  functions: Watching "C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\adamw\\OneDrive\\Bureau\\Quizet\\world-quiz\\functions\" for Cloud Functions..."}}
+[debug] [2025-12-17T05:13:25.520Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2025-12-17T05:13:26.240Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "24"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2025-12-17T05:13:26.240Z] Building nodejs source
+[debug] [2025-12-17T05:13:26.240Z] Failed to find version of module node: reached end of search path C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions\node_modules
+[info] +  functions: Using node@24 from host. 
+[debug] [2025-12-17T05:13:26.242Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-12-17T05:13:26.249Z] Found firebase-functions binary at 'C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8398
+
+[debug] [2025-12-17T05:13:26.729Z] Got response from /__/functions.yaml {"endpoints":{},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2025-12-17T05:13:30.762Z] defaultcredentials: writing to file C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json
+[debug] [2025-12-17T05:13:30.763Z] Setting GAC to C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\adamw\\AppData\\Roaming\\firebase\\adam_wahada_esprit.tn_application_default_credentials.json"}}
+[info] +  functions: Loaded functions definitions from source: . {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: ."}}
+[debug] [2025-12-17T05:13:30.770Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬──────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI              │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth       │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Firestore      │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Extensions     │ 127.0.0.1:5001 │ http://127.0.0.1:4000/extensions │
+└────────────────┴────────────────┴──────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500, 9150
+┌─────────────────────────┬───────────────┬─────────────────────┐
+│ Extension Instance Name │ Extension Ref │ View in Emulator UI │
+└─────────────────────────┴───────────────┴─────────────────────┘
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2025-12-17T05:15:54.870Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast [none]
+[debug] [2025-12-17T05:15:54.871Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"eventId":"36b49fe4-9b55-4196-ab0d-afafffec5959","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/world-quizet","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2025-12-17T05:15:54.869Z","data":{"uid":"yApAXBbfaDQ1OLoEaTMT1QBvxyF9","email":"adamwahada@esprit.tn","emailVerified":false,"metadata":{"creationTime":"2025-12-17T05:15:54.867Z","lastSignInTime":"2025-12-17T05:15:54.867Z"},"customClaims":{},"providerData":[{"rawId":"adamwahada@esprit.tn","providerId":"password","email":"adamwahada@esprit.tn","federatedId":"adamwahada@esprit.tn"}]}}
+[debug] [2025-12-17T05:15:54.879Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast 200
+[debug] [2025-12-17T05:15:54.879Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2025-12-17T05:16:11.241Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:16:11.241Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:16:11.242Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:16:11.241Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:16:11.244Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:18:42.280Z] Received signal SIGHUP 1
+[info]  
+[info] i  emulators: Received SIGHUP for the first time. Starting a clean shutdown. 
+[info] i  emulators: Please wait for a clean shutdown or send the SIGHUP signal again to stop right now. 
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[info] i  ui: Stopping Emulator UI {"metadata":{"emulator":{"name":"ui"},"message":"Stopping Emulator UI"}}
+[info] i  extensions: Stopping Extensions Emulator {"metadata":{"emulator":{"name":"extensions"},"message":"Stopping Extensions Emulator"}}
+[debug] [2025-12-17T05:18:42.286Z] [Extensions] Stopping Extensions emulator, this is a noop.
+[info] i  functions: Stopping Functions Emulator {"metadata":{"emulator":{"name":"functions"},"message":"Stopping Functions Emulator"}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[warn] !  Firestore Emulator has exited upon receiving signal: SIGINT 
+[info] i  auth: Stopping Authentication Emulator {"metadata":{"emulator":{"name":"auth"},"message":"Stopping Authentication Emulator"}}
+[info] i  eventarc: Stopping Eventarc Emulator {"metadata":{"emulator":{"name":"eventarc"},"message":"Stopping Eventarc Emulator"}}
+[info] i  tasks: Stopping Cloud Tasks Emulator {"metadata":{"emulator":{"name":"tasks"},"message":"Stopping Cloud Tasks Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2025-12-17T05:18:42.293Z] Emulator locator file path: C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[info] i  logging: Stopping Logging Emulator {"metadata":{"emulator":{"name":"logging"},"message":"Stopping Logging Emulator"}}
+[debug] [2025-12-17T05:18:42.296Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[debug] [2025-12-17T05:18:55.588Z] ----------------------------------------------------------------------
+[debug] [2025-12-17T05:18:55.593Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\adamw\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --debug
+[debug] [2025-12-17T05:18:55.593Z] CLI Version:   15.0.0
+[debug] [2025-12-17T05:18:55.594Z] Platform:      win32
+[debug] [2025-12-17T05:18:55.594Z] Node Version:  v24.11.1
+[debug] [2025-12-17T05:18:55.594Z] Time:          Wed Dec 17 2025 06:18:55 GMT+0100 (heure normale d’Europe centrale)
+[debug] [2025-12-17T05:18:55.594Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-17T05:18:57.097Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-17T05:18:57.098Z] > authorizing via signed-in user (adam.wahada@esprit.tn)
+[debug] [2025-12-17T05:18:57.202Z] java version "21.0.9" 2025-10-21 LTS
+
+[debug] [2025-12-17T05:18:57.203Z] Java(TM) SE Runtime Environment (build 21.0.9+7-LTS-338)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.9+7-LTS-338, mixed mode, sharing)
+
+[debug] [2025-12-17T05:18:57.215Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: auth, functions, firestore, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, extensions"}}
+[debug] [2025-12-17T05:18:57.217Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:18:57.217Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:18:57.219Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet [none]
+[debug] [2025-12-17T05:18:58.075Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet 200
+[debug] [2025-12-17T05:18:58.076Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet {"projectNumber":"404708679350","projectId":"world-quizet","lifecycleState":"ACTIVE","name":"World-QUIZET","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-12-09T01:25:58.757500Z","parent":{"type":"organization","id":"387578357282"}}
+[warn] !  firestore: Port 8080 is not open on localhost (127.0.0.1), could not start Firestore Emulator. {"metadata":{"emulator":{"name":"firestore"},"message":"Port 8080 is not open on localhost (127.0.0.1), could not start Firestore Emulator."}}
+[warn] !  firestore: To select a different host/port, specify that host/port in a firebase.json config file:
+      {
+        // ...
+        "emulators": {
+          "firestore": {
+            "host": "HOST",
+            "port": "PORT"
+          }
+        }
+      } {"metadata":{"emulator":{"name":"firestore"},"message":"To select a different host/port, specify that host/port in a firebase.json config file:\n      {\n        // ...\n        \"emulators\": {\n          \"firestore\": {\n            \"host\": \"\u001b[33mHOST\u001b[39m\",\n            \"port\": \"\u001b[33mPORT\u001b[39m\"\n          }\n        }\n      }"}}
+[debug] [2025-12-17T05:18:58.088Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:18:58.088Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:18:58.090Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:18:58.092Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] i  emulators: Shutting down emulators. {"metadata":{"emulator":{"name":"hub"},"message":"Shutting down emulators."}}
+[debug] [2025-12-17T05:18:58.095Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[error] 
+[error] Error: Could not start Firestore Emulator, port taken.
+[debug] [2025-12-17T05:19:03.403Z] ----------------------------------------------------------------------
+[debug] [2025-12-17T05:19:03.405Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\adamw\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --debug
+[debug] [2025-12-17T05:19:03.406Z] CLI Version:   15.0.0
+[debug] [2025-12-17T05:19:03.406Z] Platform:      win32
+[debug] [2025-12-17T05:19:03.406Z] Node Version:  v24.11.1
+[debug] [2025-12-17T05:19:03.406Z] Time:          Wed Dec 17 2025 06:19:03 GMT+0100 (heure normale d’Europe centrale)
+[debug] [2025-12-17T05:19:03.406Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-17T05:19:04.429Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-17T05:19:04.430Z] > authorizing via signed-in user (adam.wahada@esprit.tn)
+[debug] [2025-12-17T05:19:04.516Z] java version "21.0.9" 2025-10-21 LTS
+
+[debug] [2025-12-17T05:19:04.516Z] Java(TM) SE Runtime Environment (build 21.0.9+7-LTS-338)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.9+7-LTS-338, mixed mode, sharing)
+
+[debug] [2025-12-17T05:19:04.528Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: auth, functions, firestore, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, extensions"}}
+[debug] [2025-12-17T05:19:04.530Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:19:04.530Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:19:04.531Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet [none]
+[debug] [2025-12-17T05:19:05.376Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet 200
+[debug] [2025-12-17T05:19:05.377Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet {"projectNumber":"404708679350","projectId":"world-quizet","lifecycleState":"ACTIVE","name":"World-QUIZET","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-12-09T01:25:58.757500Z","parent":{"type":"organization","id":"387578357282"}}
+[debug] [2025-12-17T05:19:05.387Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:19:05.387Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:19:05.388Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:19:05.388Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:19:05.388Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-12-17T05:19:05.392Z] Emulator locator file path: C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[debug] [2025-12-17T05:19:05.392Z] [hub] writing locator at C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[debug] [2025-12-17T05:19:05.398Z] [Extensions] Started Extensions emulator, this is a noop.
+[debug] [2025-12-17T05:19:05.402Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:19:05.403Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:19:05.403Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:19:05.403Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, database, hosting, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, database, hosting, pubsub, storage, dataconnect\u001b[22m"}}
+[debug] [2025-12-17T05:19:05.417Z] defaultcredentials: writing to file C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json
+[debug] [2025-12-17T05:19:05.419Z] Setting GAC to C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\adamw\\AppData\\Roaming\\firebase\\adam_wahada_esprit.tn_application_default_credentials.json"}}
+[debug] [2025-12-17T05:19:05.419Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:19:05.419Z] Checked if tokens are valid: true, expires at: 1765950298142
+[debug] [2025-12-17T05:19:05.419Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig [none]
+[debug] [2025-12-17T05:19:05.904Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig 200
+[debug] [2025-12-17T05:19:05.905Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig {"projectId":"world-quizet","storageBucket":"world-quizet.firebasestorage.app"}
+[debug] [2025-12-17T05:19:05.944Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-12-17T05:19:05.945Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2025-12-17T05:19:05.945Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\adamw\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.20.2.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--project_id","world-quizet","--rules","C:\\Users\\adamw\\OneDrive\\Bureau\\Quizet\\world-quiz\\firestore.rules","--single_project_mode",true,"--functions_emulator","127.0.0.1:5001"],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false,"shell":false,"port":8080} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\adamw\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.20.2.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"world-quizet\",\"--rules\",\"C:\\\\Users\\\\adamw\\\\OneDrive\\\\Bureau\\\\Quizet\\\\world-quiz\\\\firestore.rules\",\"--single_project_mode\",true,\"--functions_emulator\",\"127.0.0.1:5001\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false,\"shell\":false,\"port\":8080}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[info] +  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2025-12-17T05:19:12.952Z] [Extensions] Connecting Extensions emulator, this is a noop.
+[info] i  functions: Watching "C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\adamw\\OneDrive\\Bureau\\Quizet\\world-quiz\\functions\" for Cloud Functions..."}}
+[debug] [2025-12-17T05:19:12.958Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2025-12-17T05:19:13.762Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "24"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2025-12-17T05:19:13.762Z] Building nodejs source
+[debug] [2025-12-17T05:19:13.763Z] Failed to find version of module node: reached end of search path C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions\node_modules
+[info] +  functions: Using node@24 from host. 
+[debug] [2025-12-17T05:19:13.765Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-12-17T05:19:13.773Z] Found firebase-functions binary at 'C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8399
+
+[debug] [2025-12-17T05:19:14.311Z] Got response from /__/functions.yaml {"endpoints":{},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2025-12-17T05:19:18.350Z] defaultcredentials: writing to file C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json
+[debug] [2025-12-17T05:19:18.352Z] Setting GAC to C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\adamw\\AppData\\Roaming\\firebase\\adam_wahada_esprit.tn_application_default_credentials.json"}}
+[info] +  functions: Loaded functions definitions from source: . {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: ."}}
+[debug] [2025-12-17T05:19:18.356Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬──────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI              │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth       │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Firestore      │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Extensions     │ 127.0.0.1:5001 │ http://127.0.0.1:4000/extensions │
+└────────────────┴────────────────┴──────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500, 9150
+┌─────────────────────────┬───────────────┬─────────────────────┐
+│ Extension Instance Name │ Extension Ref │ View in Emulator UI │
+└─────────────────────────┴───────────────┴─────────────────────┘
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2025-12-17T05:20:37.261Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast [none]
+[debug] [2025-12-17T05:20:37.262Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"eventId":"6c6b0607-08b7-4a52-b6ab-418c627f8d24","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/world-quizet","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2025-12-17T05:20:37.260Z","data":{"uid":"znyVkyUs1p6TesXjZ2XhlkIBrBMl","email":"adam.wahada@esprit.tn","emailVerified":false,"metadata":{"creationTime":"2025-12-17T05:20:37.258Z","lastSignInTime":"2025-12-17T05:20:37.258Z"},"customClaims":{},"providerData":[{"rawId":"adam.wahada@esprit.tn","providerId":"password","email":"adam.wahada@esprit.tn","federatedId":"adam.wahada@esprit.tn"}]}}
+[debug] [2025-12-17T05:20:37.273Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast 200
+[debug] [2025-12-17T05:20:37.274Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2025-12-17T05:20:41.937Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:20:41.937Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:20:41.938Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:20:41.937Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:20:41.940Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:21:14.219Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:21:14.219Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: only owner or participating players\n      allow read: if request.auth != null\n                   && (resource.data.ownerId == request.auth.uid\n                       || resource.data.players.keys().hasAny([request.auth.uid]));\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants can update\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid]))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:21:15.396Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:21:15.397Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:21:16.387Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:21:16.388Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: only owner or participating players\n      allow read: if request.auth != null\n                   && (resource.data.ownerId == request.auth.uid\n                       || resource.data.players.keys().hasAny([request.auth.uid]));\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants can update\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid]))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:21:16.471Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:21:16.471Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[debug] [2025-12-17T05:21:25.126Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:21:25.126Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:21:25.127Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:21:25.126Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:21:25.127Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:21:52.385Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:21:52.384Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:21:52.386Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:21:52.384Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:21:52.387Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:22:23.085Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:22:23.084Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:22:23.086Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:22:23.084Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:22:23.087Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:22:35.283Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:22:35.283Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:22:35.284Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:22:35.283Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:22:35.286Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:24:20.247Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:24:20.247Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:24:20.249Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:24:20.247Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:24:20.250Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:24:55.281Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:24:55.281Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:24:55.282Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:24:55.281Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:24:55.283Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:27:55.778Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:27:55.778Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:27:55.779Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:27:55.778Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:27:55.781Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:30:52.828Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:30:52.828Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:30:52.829Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:30:52.828Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:30:52.829Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:31:30.184Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast [none]
+[debug] [2025-12-17T05:31:30.184Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"eventId":"de6cc42a-6282-46a6-8def-be614e8dc090","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/world-quizet","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2025-12-17T05:31:30.183Z","data":{"uid":"SIVmW8z2BZ720CAgBa6ST2s4cKOY","email":"hanen.kamoun@esprit.tn","emailVerified":false,"metadata":{"creationTime":"2025-12-17T05:31:30.183Z","lastSignInTime":"2025-12-17T05:31:30.183Z"},"customClaims":{},"providerData":[{"rawId":"hanen.kamoun@esprit.tn","providerId":"password","email":"hanen.kamoun@esprit.tn","federatedId":"hanen.kamoun@esprit.tn"}]}}
+[debug] [2025-12-17T05:31:30.187Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast 200
+[debug] [2025-12-17T05:31:30.188Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"status":"multicast_acknowledged"}
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:33:31.440Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:33:31.441Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: anyone can read to find sessions by code, or owner/participants\n      allow read: if request.auth != null\n                   && (resource.data.ownerId == request.auth.uid\n                       || resource.data.players.keys().hasAny([request.auth.uid])\n                       || resource.data.status == 'waiting'); // Allow reading waiting sessions to join\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants or joining a waiting session\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid])\n                        || (resource.data.status == 'waiting' && !request.resource.data.players.keys().hasAny([request.auth.uid])))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:33:31.552Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:33:31.552Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:33:39.910Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:33:39.910Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: anyone can read to find sessions by code, or owner/participants\n      allow read: if request.auth != null\n                   && (resource.data.ownerId == request.auth.uid\n                       || resource.data.players.keys().hasAny([request.auth.uid])\n                       || resource.data.status == 'waiting'); // Allow reading waiting sessions to join\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants or joining a waiting session\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid])\n                        || (resource.data.status == 'waiting' && !request.resource.data.players.keys().hasAny([request.auth.uid])))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:33:39.952Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:33:39.953Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[warn] !  firestore: Fatal error occurred: 
+   Firestore Emulator has exited with code: 3221225786, 
+   stopping all running emulators {"metadata":{"emulator":{"name":"firestore"},"message":"Fatal error occurred: \n   Firestore Emulator has exited with code: 3221225786, \n   stopping all running emulators"}}
+[info] i  ui: Stopping Emulator UI {"metadata":{"emulator":{"name":"ui"},"message":"Stopping Emulator UI"}}
+[info] i  extensions: Stopping Extensions Emulator {"metadata":{"emulator":{"name":"extensions"},"message":"Stopping Extensions Emulator"}}
+[debug] [2025-12-17T05:34:47.332Z] [Extensions] Stopping Extensions emulator, this is a noop.
+[info] i  functions: Stopping Functions Emulator {"metadata":{"emulator":{"name":"functions"},"message":"Stopping Functions Emulator"}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[info] i  auth: Stopping Authentication Emulator {"metadata":{"emulator":{"name":"auth"},"message":"Stopping Authentication Emulator"}}
+[info] i  eventarc: Stopping Eventarc Emulator {"metadata":{"emulator":{"name":"eventarc"},"message":"Stopping Eventarc Emulator"}}
+[info] i  tasks: Stopping Cloud Tasks Emulator {"metadata":{"emulator":{"name":"tasks"},"message":"Stopping Cloud Tasks Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2025-12-17T05:34:47.337Z] Emulator locator file path: C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[info] i  logging: Stopping Logging Emulator {"metadata":{"emulator":{"name":"logging"},"message":"Stopping Logging Emulator"}}
+[debug] [2025-12-17T05:34:53.060Z] ----------------------------------------------------------------------
+[debug] [2025-12-17T05:34:53.062Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\adamw\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start --debug
+[debug] [2025-12-17T05:34:53.063Z] CLI Version:   15.0.0
+[debug] [2025-12-17T05:34:53.063Z] Platform:      win32
+[debug] [2025-12-17T05:34:53.063Z] Node Version:  v24.11.1
+[debug] [2025-12-17T05:34:53.063Z] Time:          Wed Dec 17 2025 06:34:53 GMT+0100 (heure normale d’Europe centrale)
+[debug] [2025-12-17T05:34:53.063Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-17T05:34:54.009Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-17T05:34:54.010Z] > authorizing via signed-in user (adam.wahada@esprit.tn)
+[debug] [2025-12-17T05:34:54.101Z] java version "21.0.9" 2025-10-21 LTS
+
+[debug] [2025-12-17T05:34:54.102Z] Java(TM) SE Runtime Environment (build 21.0.9+7-LTS-338)
+Java HotSpot(TM) 64-Bit Server VM (build 21.0.9+7-LTS-338, mixed mode, sharing)
+
+[debug] [2025-12-17T05:34:54.130Z] Parsed Java major version: 21
+[info] i  emulators: Starting emulators: auth, functions, firestore, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: auth, functions, firestore, extensions"}}
+[debug] [2025-12-17T05:34:54.132Z] Checked if tokens are valid: false, expires at: 1765950298142
+[debug] [2025-12-17T05:34:54.132Z] Checked if tokens are valid: false, expires at: 1765950298142
+[debug] [2025-12-17T05:34:54.133Z] > refreshing access token with scopes: []
+[debug] [2025-12-17T05:34:54.136Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-12-17T05:34:54.136Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-17T05:34:54.433Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-12-17T05:34:54.434Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-12-17T05:34:54.444Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet [none]
+[debug] [2025-12-17T05:34:55.364Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet 200
+[debug] [2025-12-17T05:34:55.364Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/world-quizet {"projectNumber":"404708679350","projectId":"world-quizet","lifecycleState":"ACTIVE","name":"World-QUIZET","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-12-09T01:25:58.757500Z","parent":{"type":"organization","id":"387578357282"}}
+[debug] [2025-12-17T05:34:55.374Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:34:55.374Z] [auth] Authentication Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:34:55.374Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:34:55.375Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:34:55.375Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2025-12-17T05:34:55.379Z] Emulator locator file path: C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[debug] [2025-12-17T05:34:55.380Z] [hub] writing locator at C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json
+[debug] [2025-12-17T05:34:55.385Z] [Extensions] Started Extensions emulator, this is a noop.
+[debug] [2025-12-17T05:34:55.392Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:34:55.392Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:34:55.392Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2025-12-17T05:34:55.392Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"auth":[{"address":"127.0.0.1","family":"IPv4","port":9099}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: apphosting, database, hosting, pubsub, storage, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mapphosting, database, hosting, pubsub, storage, dataconnect\u001b[22m"}}
+[debug] [2025-12-17T05:34:55.407Z] defaultcredentials: writing to file C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json
+[debug] [2025-12-17T05:34:55.408Z] Setting GAC to C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\adamw\\AppData\\Roaming\\firebase\\adam_wahada_esprit.tn_application_default_credentials.json"}}
+[debug] [2025-12-17T05:34:55.408Z] Checked if tokens are valid: true, expires at: 1765953293434
+[debug] [2025-12-17T05:34:55.409Z] Checked if tokens are valid: true, expires at: 1765953293434
+[debug] [2025-12-17T05:34:55.409Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig [none]
+[debug] [2025-12-17T05:34:55.928Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig 200
+[debug] [2025-12-17T05:34:55.929Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/world-quizet/adminSdkConfig {"projectId":"world-quizet","storageBucket":"world-quizet.firebasestorage.app"}
+[debug] [2025-12-17T05:34:55.949Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2025-12-17T05:34:55.949Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2025-12-17T05:34:55.950Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","C:\\Users\\adamw\\.cache\\firebase\\emulators\\cloud-firestore-emulator-v1.20.2.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--project_id","world-quizet","--rules","C:\\Users\\adamw\\OneDrive\\Bureau\\Quizet\\world-quiz\\firestore.rules","--single_project_mode",true,"--functions_emulator","127.0.0.1:5001"],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false,"shell":false,"port":8080} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"C:\\\\Users\\\\adamw\\\\.cache\\\\firebase\\\\emulators\\\\cloud-firestore-emulator-v1.20.2.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"world-quizet\",\"--rules\",\"C:\\\\Users\\\\adamw\\\\OneDrive\\\\Bureau\\\\Quizet\\\\world-quiz\\\\firestore.rules\",\"--single_project_mode\",true,\"--functions_emulator\",\"127.0.0.1:5001\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false,\"shell\":false,\"port\":8080}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[info] +  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2025-12-17T05:35:02.979Z] [Extensions] Connecting Extensions emulator, this is a noop.
+[info] i  functions: Watching "C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\adamw\\OneDrive\\Bureau\\Quizet\\world-quiz\\functions\" for Cloud Functions..."}}
+[debug] [2025-12-17T05:35:02.986Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2025-12-17T05:35:03.886Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "24"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.4.1",
+    "typescript": "^5.7.3"
+  },
+  "private": true
+}
+[debug] [2025-12-17T05:35:03.887Z] Building nodejs source
+[debug] [2025-12-17T05:35:03.888Z] Failed to find version of module node: reached end of search path C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions\node_modules
+[info] +  functions: Using node@24 from host. 
+[debug] [2025-12-17T05:35:03.892Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-12-17T05:35:03.901Z] Found firebase-functions binary at 'C:\Users\adamw\OneDrive\Bureau\Quizet\world-quiz\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8110
+
+[debug] [2025-12-17T05:35:04.676Z] Got response from /__/functions.yaml {"endpoints":{},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2025-12-17T05:35:08.716Z] defaultcredentials: writing to file C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json
+[debug] [2025-12-17T05:35:08.717Z] Setting GAC to C:\Users\adamw\AppData\Roaming\firebase\adam_wahada_esprit.tn_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\adamw\\AppData\\Roaming\\firebase\\adam_wahada_esprit.tn_application_default_credentials.json"}}
+[info] +  functions: Loaded functions definitions from source: . {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: ."}}
+[debug] [2025-12-17T05:35:08.722Z] Could not find VSCode notification endpoint: FetchError: request to http://localhost:40001/vscode/notify failed, reason: . If you are not running the Firebase Data Connect VSCode extension, this is expected and not an issue.
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┬──────────────────────────────────┐
+│ Emulator       │ Host:Port      │ View in Emulator UI              │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Authentication │ 127.0.0.1:9099 │ http://127.0.0.1:4000/auth       │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Functions      │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Firestore      │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore  │
+├────────────────┼────────────────┼──────────────────────────────────┤
+│ Extensions     │ 127.0.0.1:5001 │ http://127.0.0.1:4000/extensions │
+└────────────────┴────────────────┴──────────────────────────────────┘
+  Emulator Hub host: 127.0.0.1 port: 4400
+  Other reserved ports: 4500, 9150
+┌─────────────────────────┬───────────────┬─────────────────────┐
+│ Extension Instance Name │ Extension Ref │ View in Emulator UI │
+└─────────────────────────┴───────────────┴─────────────────────┘
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2025-12-17T05:36:05.211Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast [none]
+[debug] [2025-12-17T05:36:05.212Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"eventId":"71030c89-39de-4f24-bd1f-c15264dfe2b4","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/world-quizet","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2025-12-17T05:36:05.211Z","data":{"uid":"LJHxxMmDZIt9X8PL5FpOjFKbL9Pv","email":"adam.wahada@esprit.tn","emailVerified":false,"metadata":{"creationTime":"2025-12-17T05:36:05.209Z","lastSignInTime":"2025-12-17T05:36:05.209Z"},"customClaims":{},"providerData":[{"rawId":"adam.wahada@esprit.tn","providerId":"password","email":"adam.wahada@esprit.tn","federatedId":"adam.wahada@esprit.tn"}]}}
+[debug] [2025-12-17T05:36:05.224Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast 200
+[debug] [2025-12-17T05:36:05.225Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"status":"multicast_acknowledged"}
+[debug] [2025-12-17T05:36:50.026Z] [work-queue] {"queuedWork":["/world-quizet/us-central1/createGame-2025-12-17T05:36:50.026Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:36:50.027Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/world-quizet/us-central1/createGame-2025-12-17T05:36:50.026Z"],"workRunningCount":1}
+[debug] [2025-12-17T05:36:50.030Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2025-12-17T05:37:26.722Z] >>> [apiv2][query] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast [none]
+[debug] [2025-12-17T05:37:26.723Z] >>> [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"eventId":"74b1bad2-75fe-40d3-97d3-76931edbb370","eventType":"providers/firebase.auth/eventTypes/user.create","resource":{"name":"projects/world-quizet","service":"firebaseauth.googleapis.com"},"params":{},"timestamp":"2025-12-17T05:37:26.722Z","data":{"uid":"y7NTZ6f9JunugW9A85uOtAerH686","email":"aa@esprit.tn","emailVerified":false,"metadata":{"creationTime":"2025-12-17T05:37:26.722Z","lastSignInTime":"2025-12-17T05:37:26.722Z"},"customClaims":{},"providerData":[{"rawId":"aa@esprit.tn","providerId":"password","email":"aa@esprit.tn","federatedId":"aa@esprit.tn"}]}}
+[debug] [2025-12-17T05:37:26.728Z] <<< [apiv2][status] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast 200
+[debug] [2025-12-17T05:37:26.728Z] <<< [apiv2][body] POST http://127.0.0.1:5001/functions/projects/world-quizet/trigger_multicast {"status":"multicast_acknowledged"}
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:38:45.802Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:38:45.802Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: anyone can read waiting sessions to join, or if owner/participant\n      allow read: if request.auth != null\n                   && (resource.data.status == 'waiting'\n                       || resource.data.ownerId == request.auth.uid\n                       || resource.data.players.keys().hasAny([request.auth.uid]));\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants or joining a waiting session\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid])\n                        || (resource.data.status == 'waiting' && !request.resource.data.players.keys().hasAny([request.auth.uid])))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:38:45.918Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:38:45.918Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:38:55.634Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:38:55.634Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: anyone can read waiting sessions to join, or if owner/participant\n      allow read: if request.auth != null\n                   && (resource.data.status == 'waiting'\n                       || resource.data.ownerId == request.auth.uid\n                       || resource.data.players.keys().hasAny([request.auth.uid]));\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants or joining a waiting session\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid])\n                        || (resource.data.status == 'waiting' && !request.resource.data.players.keys().hasAny([request.auth.uid])))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:38:55.711Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:38:55.711Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:39:40.551Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:39:40.551Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: allow if authenticated (waiting rooms are public for joining)\n      allow read: if request.auth != null;\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants or joining a waiting session\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid])\n                        || (resource.data.status == 'waiting' && !request.resource.data.players.keys().hasAny([request.auth.uid])))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:39:40.623Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:39:40.624Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:39:52.249Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:39:52.250Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: allow if authenticated (waiting rooms are public for joining)\n      allow read: if request.auth != null;\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: owner or participants or joining a waiting session\n      allow update: if request.auth != null\n                    && (resource.data.ownerId == request.auth.uid\n                        || resource.data.players.keys().hasAny([request.auth.uid])\n                        || (resource.data.status == 'waiting' && !request.resource.data.players.keys().hasAny([request.auth.uid])))\n                    && request.resource.data.players.size() <= resource.data.maxPlayers\n                    && (resource.data.status == 'waiting' || resource.data.status == 'playing');\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:39:52.294Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:39:52.294Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:40:55.530Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:40:55.531Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: allow if authenticated (waiting rooms are public for joining)\n      allow read: if request.auth != null;\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: allow if authenticated (app validates joining rules)\n      allow update: if request.auth != null;\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:40:55.563Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:40:55.564Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[info] i  firestore: Change detected, updating rules... 
+[debug] [2025-12-17T05:41:13.051Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules [none]
+[debug] [2025-12-17T05:41:13.051Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {"ignore_errors":true,"rules":{"files":[{"name":"security.rules","content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n\n    // Games collection\n    match /games/{gameId} {\n\n      // Read: allow if authenticated (waiting rooms are public for joining)\n      allow read: if request.auth != null;\n\n      // Create: only authenticated, player count valid, status waiting\n      allow create: if request.auth != null\n                    && request.resource.data.ownerId == request.auth.uid\n                    && request.resource.data.players.keys().hasAll([request.auth.uid])\n                    && request.resource.data.players.size() <= request.resource.data.maxPlayers\n                    && request.resource.data.status == 'waiting';\n\n      // Update: allow if authenticated (app validates joining rules)\n      allow update: if request.auth != null;\n\n      // Delete: only owner can delete\n      allow delete: if request.auth != null && resource.data.ownerId == request.auth.uid;\n    }\n  }\n}\n"}]}}
+[debug] [2025-12-17T05:41:13.093Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules 200
+[debug] [2025-12-17T05:41:13.094Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/world-quizet:securityRules {}
+[info] +  firestore: Rules updated. 
+[warn] !  firestore: Fatal error occurred: 
+   Firestore Emulator has exited with code: 3221225786, 
+   stopping all running emulators {"metadata":{"emulator":{"name":"firestore"},"message":"Fatal error occurred: \n   Firestore Emulator has exited with code: 3221225786, \n   stopping all running emulators"}}
+[info] i  ui: Stopping Emulator UI {"metadata":{"emulator":{"name":"ui"},"message":"Stopping Emulator UI"}}
+[info] i  extensions: Stopping Extensions Emulator {"metadata":{"emulator":{"name":"extensions"},"message":"Stopping Extensions Emulator"}}
+[debug] [2025-12-17T05:42:55.545Z] [Extensions] Stopping Extensions emulator, this is a noop.
+[info] i  functions: Stopping Functions Emulator {"metadata":{"emulator":{"name":"functions"},"message":"Stopping Functions Emulator"}}
+[info] i  firestore: Stopping Firestore Emulator {"metadata":{"emulator":{"name":"firestore"},"message":"Stopping Firestore Emulator"}}
+[info] i  auth: Stopping Authentication Emulator {"metadata":{"emulator":{"name":"auth"},"message":"Stopping Authentication Emulator"}}
+[info] i  eventarc: Stopping Eventarc Emulator {"metadata":{"emulator":{"name":"eventarc"},"message":"Stopping Eventarc Emulator"}}
+[info] i  tasks: Stopping Cloud Tasks Emulator {"metadata":{"emulator":{"name":"tasks"},"message":"Stopping Cloud Tasks Emulator"}}
+[info] i  hub: Stopping emulator hub {"metadata":{"emulator":{"name":"hub"},"message":"Stopping emulator hub"}}
+[debug] [2025-12-17T05:42:55.555Z] Emulator locator file path: C:\Users\adamw\AppData\Local\Temp\hub-world-quizet.json

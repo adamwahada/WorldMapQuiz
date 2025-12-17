@@ -151,7 +151,13 @@
           <!-- Session Name -->
           <div class="session-section">
             <h3 class="section-title">{{ t.sessionName }}</h3>
-            <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
+            <input type="text" [(ngModel)]="sessionName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
+          </div>
+
+          <!-- Player Name -->
+          <div class="session-section">
+            <h3 class="section-title">Your Name</h3>
+            <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="'Enter your player name...'"/>
           </div>
 
           <!-- Create Button -->
@@ -171,8 +177,8 @@
               <input type="text" [(ngModel)]="joinGameCode" class="modal-input code-input" [placeholder]="t.codePlaceholder"/>
             </div>
             <div class="session-section">
-              <h3 class="section-title">{{ t.sessionName }}</h3>
-              <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="t.sessionNamePlaceholder"/>
+              <h3 class="section-title">Your Name</h3>
+              <input type="text" [(ngModel)]="playerName" class="modal-input" [placeholder]="'Enter your player name...'"/>
             </div>
             <button class="btn-netflix primary full-width" (click)="attemptJoin()">
               <span>{{ t.validateAndJoin }}</span>

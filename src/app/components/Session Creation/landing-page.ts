@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from 'firebase/auth';
 import { ToastrService } from 'ngx-toastr';
+import { nanoid } from 'nanoid';
 
 import { AuthService } from '../../services/auth.service';
 import { GameService, GameSettings } from '../../services/game.service';
@@ -55,7 +56,8 @@ export class LandingPageComponent implements OnInit {
   players: 2 | 3 | 4 = 2;
   difficulty: 'easy' | 'medium' | 'hard' = 'easy';
   minutes = 15;
-  playerName = '';
+  sessionName = ''; // Name of the session
+  playerName = ''; // Player's account name
   joinGameCode = '';
 
   // ---------------------
@@ -301,9 +303,16 @@ export class LandingPageComponent implements OnInit {
     this.loading.set(true);
     this.persistSettings();
 
+    if (!this.sessionName.trim()) {
+      console.log('Session name is empty');
+      this.toastr.error('Please enter a session name', 'Error');
+      this.loading.set(false);
+      return;
+    }
+
     if (!this.playerName.trim()) {
       console.log('Player name is empty');
-      this.toastr.error('Please enter a session name', 'Error');
+      this.toastr.error('Please enter your player name', 'Error');
       this.loading.set(false);
       return;
     }
@@ -329,6 +338,8 @@ export class LandingPageComponent implements OnInit {
       };
 
       console.log('Creating game with settings:', settings);
+      
+      // Use GameService which handles the Cloud Function
       const { gameId, code } = await this.games.createGame(
         this.playerName.trim(),
         settings,
@@ -336,12 +347,30 @@ export class LandingPageComponent implements OnInit {
       );
 
       console.log('Game created:', gameId, code);
-      this.setSession(gameId, code);
+      this.setSession(gameId, code || '');
+      // Store player name for the waiting room
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('playerName', this.playerName.trim());
+      }
       this.setUserStatus(true, gameId);
       this.router.navigate(['/waiting-room', gameId]);
+
     } catch (e: any) {
       console.error('Error creating session:', e);
-      this.toastr.error(e.message || 'Could not create session');
+
+      // Handle specific error codes from Cloud Function
+      if (e.message && e.message.includes('3 sessions')) {
+        this.toastr.error('You can only create 3 sessions per 24 hours', 'Limit reached');
+      } else if (e.message && e.message.includes('not authenticated')) {
+        this.toastr.error('You must be logged in to create a session', 'Error');
+      } else if (e.code === 'resource-exhausted') {
+        this.toastr.error('You can only create 3 sessions per 24 hours', 'Limit reached');
+      } else if (e.code === 'unauthenticated') {
+        this.toastr.error('You must be logged in to create a session', 'Error');
+      } else {
+        this.toastr.error(e.message || 'Could not create session', 'Error');
+      }
+
     } finally {
       this.loading.set(false);
     }
@@ -399,6 +428,10 @@ export class LandingPageComponent implements OnInit {
 
       console.log('Game joined:', gameId);
       this.setSession(gameId, this.joinGameCode.trim());
+      // Store player name for the waiting room
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('playerName', this.playerName.trim());
+      }
       this.setUserStatus(true, gameId);
       this.router.navigate(['/waiting-room', gameId]);
     } catch (e: any) {
