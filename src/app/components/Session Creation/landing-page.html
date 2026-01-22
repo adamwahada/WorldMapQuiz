@@ -112,7 +112,16 @@
             </div>
           </div>
 
-
+          <!-- Difficulty -->
+          <div class="session-section">
+            <h3 class="section-title">{{ t.difficulty }}</h3>
+            <div class="button-group">
+              <button class="action-btn" [class.active]="difficulty==='easy'" (click)="difficulty='easy'">{{ t.easy }}</button>
+              <button class="action-btn" [class.active]="difficulty==='medium'" (click)="difficulty='medium'">{{ t.medium }}</button>
+              <button class="action-btn" [class.active]="difficulty==='hard'" (click)="difficulty='hard'">{{ t.hard }}</button>
+            </div>
+            <p class="section-note">{{ t.diffNote }}</p>
+          </div>
 
           <!-- Timer -->
           <div class="session-section">
